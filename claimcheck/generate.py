@@ -50,7 +50,9 @@ def _letter(kind: str, payload: dict, template: Letter) -> dict:
     for _ in range(2):
         try:
             r = llm.generate_json("generate", [f"Draft the {kind}. Input:\n{json.dumps(payload)}"], Letter,
-                                  STYLE + "\nLeave placeholders like [Your name] for anything not in the input.")
+                                  STYLE + "\nWrite in the first person AS THE POLICYHOLDER, addressed to the insurer "
+                                  "(e.g. 'To the Grievance Officer, <insurer>'). Format amounts as 'Rs 28,000'. Sign off with "
+                                  "placeholders [Your name], [Policy number], [Claim number]. Leave placeholders for anything not in the input.")
         except Exception:
             break
         bad = _guard([r.subject, r.body], allowed)

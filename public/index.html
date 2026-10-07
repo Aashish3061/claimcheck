@@ -125,7 +125,9 @@ const pill = v => `<span class="pill ${v}">${VERD[v] || v}</span>`;
 
 async function api(path, opts = {}, kind = 'json') {
   const rkey = path.replace(/^\/api\//, '').replace(/\W/g, '_') + (opts.replayKey || '');
-  if (REPLAY) { if (kind === 'blob') throw new Error('Pack download is not available in replay mode'); await new Promise(r => setTimeout(r, 600)); return (await fetch('/replay/' + rkey + '.json')).json(); }
+  if (REPLAY) { if (kind === 'blob') throw new Error('Pack download is not available in replay mode');
+    window.RB = window.RB || await (await fetch('/replay/s1.json')).json(); await new Promise(r => setTimeout(r, 600));
+    if (!(rkey in RB)) throw new Error('not recorded: ' + rkey); return RB[rkey]; }
   const h = Object.assign({'X-Session-Id': SID}, opts.headers || {});
   if (firstCall && path === '/api/extract') { h['X-Session-New'] = '1'; firstCall = false; }
   const r = await fetch(path, Object.assign({}, opts, {headers: h}));
