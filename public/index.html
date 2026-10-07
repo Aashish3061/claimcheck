@@ -168,6 +168,7 @@ const SAMPLES = {S1: ['final_bill','discharge_summary','pharmacy_bill','prescrip
   S3: ['final_bill','discharge_summary','pharmacy_bill','prescription','investigation_report','tariff_card']};
 const SAMPLE_POLICY = {S1: ['star_fho', 400000, ''], S2: ['hdfc_optima_secure', 500000, ''], S3: ['niva_reassure2', 1000000, '']};
 $('#sample').onclick = async () => {
+  await READY;
   const id = $('#sampleId').value, [pol, si, el] = SAMPLE_POLICY[id];
   $('#policy').value = pol; $('#si').value = si; $('#elig').value = el; eligUi();
   const files = await Promise.all(SAMPLES[id].map(async n => new File([await (await fetch(`/samples/${id}/${n}.pdf`)).blob()], `${id}_${n}.pdf`, {type: 'application/pdf'})));
@@ -219,6 +220,7 @@ async function runChecks() {
     `<h4>Deadline</h4><div>${pill(c.deadline.verdict)} ${esc(c.deadline.detail)} ${c.deadline.due_date ? '- due <b>' + c.deadline.due_date + '</b>' : ''}</div>`;
 }
 $('#toEstimate').onclick = async () => {
+  if (!$('#policy').value) { $('#estStatus').textContent = 'Choose your policy first.'; return; }
   $('#toEstimate').disabled = true; $('#estStatus').innerHTML = '<span class="spin"></span> Finding the governing clauses and calculating...';
   try {
     const body = {policy_id: $('#policy').value, sum_insured: +$('#si').value, eligible_room_rent_per_day: $('#elig').value ? +$('#elig').value : null,
@@ -312,7 +314,7 @@ $('#runAudit').onclick = async () => {
 $('#letterBtn').onclick = async () => { try { const r = await audit(true);
   $('#letter').innerHTML = r.letter ? `<h4>${esc(r.letter.subject)}</h4><pre>${esc(r.letter.body)}</pre><button class="btn sec" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)">Copy letter</button>` : '<p>Select at least one item.</p>';
 } catch (e) { $('#letter').textContent = e.message; } };
-init();
+const READY = init();
 </script>
 </body>
 </html>
