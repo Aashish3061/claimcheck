@@ -1,1 +1,315 @@
-<!doctype html><title>ClaimCheck</title><p>Deploying...</p>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ClaimCheck</title>
+<meta name="description" content="Get your health-insurance reimbursement claim right before you submit it, then check the insurer's maths afterwards.">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d2433;--mute:#5b6475;--line:#e3e1da;--brand:#0f5c4d;--brand2:#e7f2ef;
+--risk:#b42318;--riskbg:#fdecea;--rev:#9a6700;--revbg:#fff4d6;--ok:#1a7f37;--okbg:#e6f4ea}
+@media (prefers-color-scheme:dark){:root{--bg:#12151b;--card:#1a1f27;--ink:#e8eaf0;--mute:#a3abba;--line:#2b323d;--brand:#5cc8b0;--brand2:#173029;
+--risk:#ff8a80;--riskbg:#3a1d1b;--rev:#f5c451;--revbg:#382d12;--ok:#7ee2a0;--okbg:#16301f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{padding:20px 16px 8px;max-width:980px;margin:auto}h1{margin:0;font-size:26px;letter-spacing:-.02em}h1 span{color:var(--brand)}
+.tag{color:var(--mute);margin:4px 0 0}.disc{font-size:13px;color:var(--mute);border-left:3px solid var(--brand);padding:4px 10px;margin:10px 0 0}
+main{max-width:980px;margin:auto;padding:0 16px 60px}nav.steps{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}
+nav.steps button{flex:1;min-width:120px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px;border-radius:10px;font-weight:600;cursor:pointer}
+nav.steps button.on{background:var(--brand);color:#fff;border-color:var(--brand)}nav.steps button:disabled{opacity:.45;cursor:default}
+section{display:none}section.on{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+label{font-size:13px;color:var(--mute);display:block;margin-bottom:4px}input,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;width:100%}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.btn{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer}
+.btn.sec{background:var(--brand2);color:var(--brand)}.btn:disabled{opacity:.5}.drop{border:2px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--mute);cursor:pointer}
+.drop.hi{border-color:var(--brand);background:var(--brand2)}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+td input,td select{padding:5px}.flag{background:var(--revbg)}.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:700}
+.AT_RISK,.POTENTIAL_INCONSISTENCY,.MISSING,.MISMATCH,.LATE{background:var(--riskbg);color:var(--risk)}.REVIEW{background:var(--revbg);color:var(--rev)}
+.PAYABLE,.SUPPORTED,.OK{background:var(--okbg);color:var(--ok)}.big{display:flex;gap:12px;flex-wrap:wrap}.big div{flex:1;min-width:180px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.big b{display:block;font-size:30px;letter-spacing:-.02em}.big .r b{color:var(--risk)}.big .p b{color:var(--ok)}.find{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}
+.find h4{margin:0 0 4px;display:flex;justify-content:space-between;gap:8px}details{margin-top:6px}summary{cursor:pointer;color:var(--brand);font-weight:600}
+blockquote{margin:6px 0;padding:6px 10px;border-left:3px solid var(--brand);background:var(--brand2);font-size:13px}.mut{color:var(--mute);font-size:13px}
+.doc{display:inline-block;margin:4px;padding:6px 10px;border-radius:8px;background:var(--brand2);font-size:13px}#replayBanner{display:none;background:#b42318;color:#fff;text-align:center;padding:6px;font-weight:700}
+footer{max-width:980px;margin:auto;padding:12px 16px;color:var(--mute);font-size:12px}.spin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--brand);border-radius:50%;animation:s 1s linear infinite;vertical-align:-2px}
+@keyframes s{to{transform:rotate(360deg)}}pre{white-space:pre-wrap;background:var(--bg);padding:10px;border-radius:8px;font:13px/1.45 ui-monospace,Menlo,monospace}
+</style>
+</head>
+<body>
+<div id="replayBanner">REPLAY - recorded run (live service unavailable)</div>
+<header>
+  <h1>Claim<span>Check</span></h1>
+  <p class="tag">Get your health-insurance reimbursement claim right before you submit it, then check the insurer's maths afterwards.</p>
+  <p class="disc">An estimate, not a guarantee or legal advice. AI reads your documents and finds the policy clause; deterministic code calculates every rupee. Documents are processed in memory and never stored.</p>
+</header>
+<main>
+<nav class="steps">
+  <button data-s="1" class="on">1. Check</button><button data-s="2" disabled>2. Estimate</button>
+  <button data-s="3" disabled>3. Claim pack</button><button data-s="4" disabled>4. After settlement</button>
+</nav>
+
+<section id="s1" class="on">
+  <div class="card"><div class="row">
+    <div><label for="policy">Your policy</label><select id="policy"></select></div>
+    <div><label for="si">Sum insured (Rs)</label><input id="si" type="number" value="400000" min="50000" step="50000"></div>
+    <div id="eligWrap"><label for="elig">Eligible room rent per day (Rs)</label><input id="elig" type="number" placeholder="from policy schedule / tariff"><div class="mut" id="eligHint"></div></div>
+  </div></div>
+  <div class="card">
+    <div class="drop" id="drop" tabindex="0" role="button" aria-label="Upload documents">Drop the final bill, discharge summary, pharmacy bills, prescriptions, reports and tariff card here (PDF/JPG/PNG), or click to choose.</div>
+    <input type="file" id="file" multiple accept="application/pdf,image/jpeg,image/png" hidden>
+    <p class="mut">No documents? <button class="btn sec" id="sample" type="button">Load sample claim (synthetic)</button>
+      <select id="sampleId" style="width:auto"><option value="S1">S1 - surgery, room above cap</option><option value="S2">S2 - missing prescription</option><option value="S3">S3 - room category, ICU</option></select></p>
+    <div id="docs"></div>
+  </div>
+  <div class="card" id="checksCard" hidden><h3>Checks</h3><div id="checks"></div></div>
+  <div class="card" id="itemsCard" hidden>
+    <h3>Confirm the bill lines</h3><p class="mut">Highlighted cells were flagged by arithmetic checks. Edit anything that is wrong, then continue.</p>
+    <div style="overflow-x:auto"><table id="items"></table></div>
+    <p><button class="btn" id="toEstimate">Confirm and estimate</button> <span id="estStatus" class="mut"></span></p>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="big"><div class="p"><span class="mut">Estimated payable</span><b id="payable">-</b></div><div class="r"><span class="mut">At risk</span><b id="atrisk">-</b></div>
+    <div><span class="mut">Billed</span><b id="billed">-</b></div></div>
+  <div class="card" id="whatifCard" hidden>
+    <h3>What if you had chosen a different room?</h3>
+    <p class="mut">Room-related amount at risk for each room rent per day. Other charges are held constant; for your next admission.</p>
+    <canvas id="chart" height="110" aria-label="At-risk amount by room rent"></canvas>
+    <label for="slider">Room rent per day: <b id="slVal"></b> - at risk <b id="slRisk"></b></label><input type="range" id="slider">
+  </div>
+  <div class="card"><h3>Findings</h3><div id="findings"></div></div>
+  <p><button class="btn" id="toPack">Continue to claim pack</button></p>
+</section>
+
+<section id="s3">
+  <div class="card"><h3>Claim pack</h3><p class="mut">These details stay in your browser except when the pack PDF is generated; they are never stored or logged. Bank details are left for you to fill by hand.</p>
+    <div class="row">
+      <div><label for="p_name">Name of primary insured</label><input id="p_name" autocomplete="name"></div>
+      <div><label for="p_pol">Policy number</label><input id="p_pol"></div>
+      <div><label for="p_phone">Phone</label><input id="p_phone" autocomplete="tel"></div>
+      <div><label for="p_email">Email</label><input id="p_email" autocomplete="email"></div>
+    </div>
+    <p><button class="btn" id="mkPack">Download claim pack (PDF)</button> <span id="packStatus" class="mut"></span></p>
+    <div id="exceptions"></div>
+  </div>
+  <p><button class="btn sec" id="toAudit">Insurer has settled? Check the settlement</button></p>
+</section>
+
+<section id="s4">
+  <div class="card"><h3>What did the insurer pay?</h3><p class="mut">Enter the amount paid for each head (from the settlement letter).</p>
+    <div style="overflow-x:auto"><table id="paid"></table></div>
+    <div class="row" style="margin-top:10px">
+      <div><label for="d_int">Claim intimation date</label><input id="d_int" type="date"></div>
+      <div><label for="d_sub">Claim submission date</label><input id="d_sub" type="date"></div>
+      <div><label for="d_set">Settlement date</label><input id="d_set" type="date"></div>
+      <div><label for="bank">RBI bank rate (% p.a.) <a href="https://www.rbi.org.in/" target="_blank" rel="noopener">check</a></label><input id="bank" type="number" step="0.01" placeholder="e.g. as on payment date"></div>
+    </div>
+    <p><button class="btn" id="runAudit">Check settlement</button></p>
+  </div>
+  <div class="card" id="auditCard" hidden><div id="audit"></div>
+    <p><button class="btn sec" id="letterBtn">Draft grievance letter for selected items</button></p><div id="letter"></div></div>
+</section>
+</main>
+<footer id="foot">ClaimCheck - session cost Rs <span id="cost">0.00</span> (<span id="tok">0</span> tokens) - <span id="meta"></span>. Policy profiles and clause mappings are being verified by the team; check your own policy schedule.</footer>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const REPLAY = new URLSearchParams(location.search).get('replay') === '1';
+const SID = crypto.randomUUID(); let firstCall = true, cost = 0, tokens = 0;
+const S = {docs: [], files: [], items: [], estimate: null, assignments: [], checks: null, policies: []};
+const inr = n => n == null ? '-' : 'Rs ' + Number(n).toLocaleString('en-IN');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const VERD = {AT_RISK:'At risk', REVIEW:'Review', PAYABLE:'Payable', POTENTIAL_INCONSISTENCY:'Potential inconsistency', SUPPORTED:'Supported', OK:'OK', MISSING:'Missing', MISMATCH:'Mismatch', LATE:'Late'};
+const pill = v => `<span class="pill ${v}">${VERD[v] || v}</span>`;
+
+async function api(path, opts = {}, kind = 'json') {
+  if (REPLAY) { const r = await fetch('/replay/' + path.replace(/^\/api\//, '').replace(/\W/g, '_') + (opts.replayKey || '') + '.json'); return r.json(); }
+  const h = Object.assign({'X-Session-Id': SID}, opts.headers || {});
+  if (firstCall && path === '/api/extract') { h['X-Session-New'] = '1'; firstCall = false; }
+  const r = await fetch(path, Object.assign({}, opts, {headers: h}));
+  cost += parseFloat(r.headers.get('X-Cost-INR') || 0); tokens += parseInt(r.headers.get('X-Tokens') || 0);
+  $('#cost').textContent = cost.toFixed(2); $('#tok').textContent = tokens.toLocaleString('en-IN');
+  if (!r.ok) { let m = r.status; try { m = (await r.json()).message || m } catch (e) {} throw new Error(m); }
+  return kind === 'blob' ? r.blob() : r.json();
+}
+const post = (p, body, kind) => api(p, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}, kind);
+
+function go(n) { $$('nav.steps button').forEach(b => { b.classList.toggle('on', b.dataset.s == n); if (b.dataset.s <= n) b.disabled = false; });
+  $$('section').forEach(s => s.classList.toggle('on', s.id == 's' + n)); scrollTo({top: 0, behavior: 'smooth'}); }
+$$('nav.steps button').forEach(b => b.onclick = () => go(b.dataset.s));
+
+// ---------- step 1 ----------
+async function init() {
+  if (REPLAY) $('#replayBanner').style.display = 'block';
+  try { const h = await api('/api/health'); $('#meta').textContent = `${h.models.extract} - pipeline ${h.pipeline_version}`; } catch (e) {}
+  S.policies = await api('/api/policies');
+  $('#policy').innerHTML = S.policies.map(p => `<option value="${p.policy_id}">${esc(p.insurer)} - ${esc(p.product)}</option>`).join('');
+  $('#policy').onchange = eligUi; eligUi();
+}
+function eligUi() {
+  const p = S.policies.find(x => x.policy_id == $('#policy').value) || {}, t = (p.room_rent || {}).type;
+  const hint = {per_day_cap_by_sum_insured: 'Set automatically from your sum insured where the policy has a rupee cap.',
+    eligible_category_from_schedule: "Enter the hospital's tariff for the room category your policy allows (see tariff card).",
+    limit_or_category_from_schedule: 'Enter the limit in your policy schedule, or the tariff of your eligible category.',
+    at_actuals_unless_schedule_specifies: 'Room rent is at actuals unless your schedule sets a limit - leave blank if none.',
+    no_limit: 'This policy has no room-rent limit.'}[t] || '';
+  $('#eligHint').textContent = hint; $('#elig').disabled = t == 'no_limit';
+}
+const drop = $('#drop');
+drop.onclick = () => $('#file').click(); drop.onkeydown = e => { if (e.key == 'Enter' || e.key == ' ') $('#file').click(); };
+drop.ondragover = e => { e.preventDefault(); drop.classList.add('hi'); }; drop.ondragleave = () => drop.classList.remove('hi');
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove('hi'); addFiles([...e.dataTransfer.files]); };
+$('#file').onchange = e => addFiles([...e.target.files]);
+const SAMPLES = {S1: ['final_bill','discharge_summary','pharmacy_bill','prescription','investigation_report'],
+  S2: ['final_bill','discharge_summary','pharmacy_bill','investigation_report'],
+  S3: ['final_bill','discharge_summary','pharmacy_bill','prescription','investigation_report','tariff_card']};
+const SAMPLE_POLICY = {S1: ['star_fho', 400000, ''], S2: ['hdfc_optima_secure', 500000, ''], S3: ['niva_reassure2', 1000000, '']};
+$('#sample').onclick = async () => {
+  const id = $('#sampleId').value, [pol, si, el] = SAMPLE_POLICY[id];
+  $('#policy').value = pol; $('#si').value = si; $('#elig').value = el; eligUi();
+  const files = await Promise.all(SAMPLES[id].map(async n => new File([await (await fetch(`/samples/${id}/${n}.pdf`)).blob()], `${id}_${n}.pdf`, {type: 'application/pdf'})));
+  S.docs = []; S.files = []; $('#docs').innerHTML = ''; addFiles(files);
+};
+async function shrink(f) {
+  if (!f.type.startsWith('image/')) return f;
+  const img = await createImageBitmap(f), k = Math.min(1, 2000 / Math.max(img.width, img.height));
+  const c = Object.assign(document.createElement('canvas'), {width: img.width * k, height: img.height * k});
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  return new File([await new Promise(r => c.toBlob(r, 'image/jpeg', .8))], f.name.replace(/\.\w+$/, '.jpg'), {type: 'image/jpeg'});
+}
+async function addFiles(list) {
+  const jobs = list.map(async f0 => {
+    const f = await shrink(f0), el = document.createElement('span'); el.className = 'doc'; el.innerHTML = `<span class="spin"></span> ${esc(f.name)}`; $('#docs').append(el);
+    if (f.size > 4e6) { el.textContent = `${f.name}: over 4 MB - please upload a smaller scan`; return; }
+    try { const fd = new FormData(); fd.append('file', f);
+      const d = await api('/api/extract', {method: 'POST', body: fd, replayKey: '_' + f.name.replace(/\W/g, '_')});
+      S.docs.push(d); S.files.push(f); el.innerHTML = `${esc(f.name)}: <b>${esc(d.doc_type.replace(/_/g, ' '))}</b>${d.needs_confirmation.length ? ' - check highlighted fields' : ''}`;
+    } catch (e) { el.textContent = `${f.name}: ${e.message}`; }
+  });
+  await Promise.all(jobs); afterExtract();
+}
+async function afterExtract() {
+  const bills = S.docs.filter(d => ['final_bill', 'itemised_bill'].includes(d.doc_type));
+  const flags = new Set(bills.flatMap(d => d.needs_confirmation));
+  S.items = bills.flatMap(d => d.line_items.map(i => ({...i, confirmed: true, flagged: flags.has(i.line_id + '.amount') || flags.has(i.line_id + '.category') || flags.has(i.line_id + '.room_days')})));
+  const tariff = S.docs.flatMap(d => d.tariff || []);
+  if (tariff.length) $('#eligHint').innerHTML = 'Tariff found: ' + tariff.map(t => `<button class="btn sec" type="button" onclick="$('#elig').value=${t.rate_per_day}">${esc(t.room_category)}: ${inr(t.rate_per_day)}</button>`).join(' ') + ' - pick the category your policy allows.';
+  renderItems(); await runChecks();
+}
+const CATS = ['room','icu','nursing','medical_practitioner_fees','ot_charges','pharmacy','consumables','implants','medical_devices','diagnostics','non_payable_candidate','other'];
+function renderItems() {
+  $('#itemsCard').hidden = !S.items.length;
+  $('#items').innerHTML = '<tr><th>Line</th><th>Description</th><th>Category</th><th>Days</th><th>Amount (Rs)</th></tr>' + S.items.map((i, n) => `<tr class="${i.flagged ? 'flag' : ''}">
+    <td>${esc(i.line_id)}</td><td><input data-n="${n}" data-k="description" value="${esc(i.description)}" aria-label="description"></td>
+    <td><select data-n="${n}" data-k="category" aria-label="category">${CATS.map(c => `<option ${c == i.category ? 'selected' : ''}>${c}</option>`).join('')}</select></td>
+    <td><input data-n="${n}" data-k="room_days" type="number" value="${i.room_days ?? ''}" style="width:70px" aria-label="days"></td>
+    <td><input data-n="${n}" data-k="amount" type="number" value="${i.amount}" aria-label="amount"></td></tr>`).join('');
+  $$('#items [data-n]').forEach(x => x.onchange = () => { const i = S.items[x.dataset.n], k = x.dataset.k;
+    i[k] = ['amount', 'room_days'].includes(k) ? (x.value === '' ? null : parseInt(x.value)) : x.value; });
+}
+async function runChecks() {
+  const docs = S.docs.map(d => ({doc_type: d.doc_type, patient_name: d.patient_name, admission_date: d.admission_date, discharge_date: d.discharge_date, stated_total: d.stated_total, line_total: d.line_total}));
+  try { S.checks = await post('/api/checks', {policy_id: $('#policy').value, docs, has_diagnostics: S.items.some(i => i.category == 'diagnostics')}); } catch (e) { return; }
+  const c = S.checks; $('#checksCard').hidden = false;
+  $('#checks').innerHTML = '<h4>Documents your insurer\'s claim page asks for</h4>' + c.completeness.map(x => `<div>${pill(x.verdict)} ${esc(x.item)}</div>`).join('') +
+    '<h4>Consistency across documents</h4>' + (c.consistency.length ? c.consistency.map(x => `<div>${pill(x.verdict)} ${esc(x.check.replace(/_/g, ' '))}: ${esc(x.detail)}</div>`).join('') : `<div>${pill('OK')} names, dates and totals agree</div>`) +
+    `<h4>Deadline</h4><div>${pill(c.deadline.verdict)} ${esc(c.deadline.detail)} ${c.deadline.due_date ? '- due <b>' + c.deadline.due_date + '</b>' : ''}</div>`;
+}
+$('#toEstimate').onclick = async () => {
+  $('#toEstimate').disabled = true; $('#estStatus').innerHTML = '<span class="spin"></span> Finding the governing clauses and calculating...';
+  try {
+    const body = {policy_id: $('#policy').value, sum_insured: +$('#si').value, eligible_room_rent_per_day: $('#elig').value ? +$('#elig').value : null,
+      items: S.items.map(({line_id, description, category, amount, room_days}) => ({line_id, description, category, amount, room_days, confirmed: true}))};
+    S.body = body; const r = await post('/api/estimate', body); S.estimate = r.estimate; S.assignments = r.assignments;
+    renderEstimate(); go(2); $('#estStatus').textContent = '';
+  } catch (e) { $('#estStatus').textContent = 'Error: ' + e.message; }
+  $('#toEstimate').disabled = false;
+};
+
+// ---------- step 2 ----------
+let chart;
+function renderEstimate() {
+  const e = S.estimate; $('#payable').textContent = inr(e.payable); $('#atrisk').textContent = inr(e.at_risk); $('#billed').textContent = inr(e.total_billed);
+  $('#findings').innerHTML = `<p class="mut">Eligible room rent: ${e.eligible_room_rent_per_day ? inr(e.eligible_room_rent_per_day) + '/day' : 'no limit'} (${esc(e.eligible_source)}); actual ${inr(e.actual_room_rent_per_day)}/day.</p>` +
+    e.items.slice().sort((a, b) => b.at_risk - a.at_risk).map(i => `<div class="find"><h4><span>${esc(i.description)}</span>${pill(i.verdict)}</h4>
+    <div>${inr(i.amount)} billed - ${inr(i.payable)} payable${i.at_risk ? ' - <b>' + inr(i.at_risk) + ' at risk</b>' : ''}</div>
+    ${i.explanation ? `<div class="mut">${esc(i.explanation)}</div>` : ''}
+    <details><summary>Show calculation</summary><p><b>Formula:</b> ${esc(i.formula)}</p>
+    ${i.policy_quote ? `<p><b>Policy clause</b> ${esc(i.policy_section || '')} (${esc(i.policy_title || '')}):</p><blockquote>${esc(i.policy_quote)}</blockquote>` : '<p class="mut">No verified policy clause found - marked for review.</p>'}
+    ${i.regulatory_quote ? `<p><b>IRDAI reference</b> ${esc(i.regulatory_ref || '')}${i.regulatory_status == 'repealed' ? ' - background only (repealed 29 May 2024; the rule now sits in your policy wording)' : ''}:</p><blockquote>${esc(i.regulatory_quote)}</blockquote>` : ''}
+    ${i.notes.length ? `<p class="mut">Review note: ${esc(i.notes.join('; '))}</p>` : ''}<p class="mut">Rule: ${esc(i.rule_type)} - confidence ${i.confidence}</p></details></div>`).join('');
+  const room = S.body.items.find(i => i.category == 'room');
+  $('#whatifCard').hidden = !(room && room.room_days && e.eligible_room_rent_per_day);
+  if (!$('#whatifCard').hidden) whatif(e.actual_room_rent_per_day, e.eligible_room_rent_per_day);
+}
+async function whatif(actual, elig) {
+  const hi = Math.ceil(Math.max(actual * 1.4, elig * 2) / 500) * 500, vals = [];
+  for (let v = 1000; v <= hi; v += 500) vals.push(v);
+  if (!vals.includes(actual)) vals.push(actual); vals.sort((a, b) => a - b);
+  const pts = await post('/api/whatif', {...S.body, assignments: S.assignments, room_rent_values: vals});
+  const css = getComputedStyle(document.documentElement), c1 = css.getPropertyValue('--risk').trim(), c2 = css.getPropertyValue('--mute').trim();
+  chart && chart.destroy();
+  chart = new Chart($('#chart'), {type: 'line', data: {labels: pts.map(p => p.room_rent_per_day), datasets: [{label: 'At risk (Rs)', data: pts.map(p => p.at_risk_room_related), borderColor: c1, pointRadius: 0, tension: .2}]},
+    options: {plugins: {legend: {display: false}, annotation: {}}, scales: {x: {title: {display: true, text: `Room rent per day (eligible: Rs ${elig.toLocaleString('en-IN')})`, color: c2}, ticks: {color: c2, maxTicksLimit: 10}}, y: {ticks: {color: c2}}}}});
+  const sl = $('#slider'); sl.min = 1000; sl.max = hi; sl.step = 500; sl.value = actual;
+  const show = () => { const v = +sl.value, p = pts.reduce((a, b) => Math.abs(b.room_rent_per_day - v) < Math.abs(a.room_rent_per_day - v) ? b : a);
+    $('#slVal').textContent = inr(p.room_rent_per_day); $('#slRisk').textContent = inr(p.at_risk_room_related); };
+  sl.oninput = show; show();
+}
+$('#toPack').onclick = () => { renderExceptions(); go(3); };
+
+// ---------- step 3 ----------
+function renderExceptions() {
+  const c = S.checks || {completeness: [], consistency: []};
+  const ex = [...c.completeness.filter(x => !x.present).map(x => `Missing: ${x.item}`), ...c.consistency.map(x => `${x.check.replace(/_/g, ' ')}: ${x.detail}`),
+    ...S.estimate.items.filter(i => i.at_risk).map(i => `${VERD[i.verdict]}: ${i.description} (${inr(i.at_risk)})`)];
+  $('#exceptions').innerHTML = '<h4>Before you submit</h4>' + (ex.length ? '<ul>' + ex.map(x => `<li>${esc(x)}</li>`).join('') + '</ul>' : '<p>No exceptions found.</p>');
+}
+$('#mkPack').onclick = async () => {
+  $('#packStatus').innerHTML = '<span class="spin"></span> Building...';
+  try {
+    const bill = S.docs.find(d => ['final_bill', 'itemised_bill'].includes(d.doc_type)) || {};
+    const personal = {'Name': $('#p_name').value, 'Policy no': $('#p_pol').value, 'Phone': $('#p_phone').value, 'Email': $('#p_email').value,
+      hospital_name: bill.hospital_name, admission_date: bill.admission_date, discharge_date: bill.discharge_date};
+    const blob = await post('/api/pack', {policy_id: S.body.policy_id, estimate: S.estimate, checks: S.checks || {}, personal, docs_present: S.docs.map(d => d.doc_type)}, 'blob');
+    const out = await PDFLib.PDFDocument.load(await blob.arrayBuffer());
+    for (const f of S.files) {
+      const buf = await f.arrayBuffer();
+      if (f.type == 'application/pdf') { const src = await PDFLib.PDFDocument.load(buf, {ignoreEncryption: true}); (await out.copyPages(src, src.getPageIndices())).forEach(p => out.addPage(p)); }
+      else { const img = f.type == 'image/png' ? await out.embedPng(buf) : await out.embedJpg(buf); const pg = out.addPage([595, 842]), k = Math.min(555 / img.width, 802 / img.height);
+        pg.drawImage(img, {x: 20, y: 822 - img.height * k, width: img.width * k, height: img.height * k}); }
+    }
+    const a = Object.assign(document.createElement('a'), {href: URL.createObjectURL(new Blob([await out.save()], {type: 'application/pdf'})), download: 'claimcheck_claim_pack.pdf'});
+    a.click(); $('#packStatus').textContent = 'Downloaded. Review it, sign the form and submit to your insurer.';
+  } catch (e) { $('#packStatus').textContent = 'Error: ' + e.message; }
+};
+$('#toAudit').onclick = () => { renderPaid(); go(4); };
+
+// ---------- step 4 ----------
+function renderPaid() {
+  $('#paid').innerHTML = '<tr><th>Head</th><th>Estimated payable</th><th>Insurer paid (Rs)</th></tr>' + S.estimate.items.map(i =>
+    `<tr><td>${esc(i.description)}</td><td>${inr(i.payable)}</td><td><input type="number" data-l="${i.line_id}" value="${i.payable}" aria-label="paid for ${esc(i.description)}"></td></tr>`).join('');
+}
+async function audit(writeLetter) {
+  const per = {}; $$('#paid [data-l]').forEach(x => per[x.dataset.l] = parseInt(x.value || 0));
+  const sel = $$('#audit input[type=checkbox]:checked').map(x => x.value);
+  return post('/api/audit', {policy_id: S.body.policy_id, estimate: S.estimate, per_head_paid: per, intimation_date: $('#d_int').value || null,
+    submission_date: $('#d_sub').value || null, settlement_date: $('#d_set').value || null, bank_rate: $('#bank').value ? +$('#bank').value / 100 : null,
+    selected_line_ids: sel, write_letter: writeLetter});
+}
+$('#runAudit').onclick = async () => {
+  try { const r = await audit(false), a = r.audit, t = r.timeline; $('#auditCard').hidden = false;
+    $('#audit').innerHTML = `<div class="big"><div><span class="mut">Estimated</span><b>${inr(a.total_estimated)}</b></div><div><span class="mut">Paid</span><b>${inr(a.total_paid)}</b></div><div class="r"><span class="mut">Variance</span><b>${inr(a.variance)}</b></div></div>
+    <table><tr><th></th><th>Head</th><th>Estimated</th><th>Paid</th><th>Variance</th><th>Verdict</th></tr>${a.rows.map(x => `<tr><td>${x.verdict == 'POTENTIAL_INCONSISTENCY' ? `<input type="checkbox" value="${x.line_id}" checked aria-label="include">` : ''}</td>
+    <td>${esc(x.description)}${x.policy_quote && x.verdict != 'SUPPORTED' ? `<blockquote>${esc(x.policy_quote)}</blockquote>` : ''}</td><td>${inr(x.estimated)}</td><td>${inr(x.paid)}</td><td>${inr(x.variance)}</td><td>${pill(x.verdict)}</td></tr>`).join('')}</table>
+    <h4>15-day settlement rule (IRDAI/PP&GR/CIR/MISC/117/9/2024)</h4><p>${t.checked ? `Settled ${t.settlement_days_after_submission} days after submission - ${t.beyond_limit ? '<b>beyond the 15-day limit</b>' : 'within the limit'}.` : esc(t.note)}
+    ${t.indicative_interest ? ` Indicative interest at bank rate + 2% for ${t.indicative_interest.days} days: <b>${inr(t.indicative_interest.amount)}</b>.` : (t.note && t.checked ? ' ' + esc(t.note) : '')}</p>`;
+  } catch (e) { $('#auditCard').hidden = false; $('#audit').textContent = 'Error: ' + e.message; }
+};
+$('#letterBtn').onclick = async () => { try { const r = await audit(true);
+  $('#letter').innerHTML = r.letter ? `<h4>${esc(r.letter.subject)}</h4><pre>${esc(r.letter.body)}</pre><button class="btn sec" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)">Copy letter</button>` : '<p>Select at least one item.</p>';
+} catch (e) { $('#letter').textContent = e.message; } };
+init();
+</script>
+</body>
+</html>

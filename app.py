@@ -185,6 +185,15 @@ def _ingest_bytes(doc_id, data, url, ocr):
                 non_payable_items=sum(1 for r in rows if r["doc_type"] == "non_payable_item"))
 
 
+@app.post("/api/admin/pdf_text")
+async def admin_pdf_text(request: Request, first: int = 1, last: int = 3):
+    if (g := _admin_guard()):
+        return g
+    from claimcheck import ingest
+    pages = ingest.pdf_pages(await request.body())
+    return dict(n_pages=len(pages), chars=[len(p) for p in pages], pages={i: pages[i - 1] for i in range(first, min(last, len(pages)) + 1)})
+
+
 @app.get("/api/admin/search")
 def admin_search(q: str, doc_types: str = "policy_wording", policy_id: str | None = None, k: int = 4):
     if (g := _admin_guard()):
