@@ -1,0 +1,270 @@
+{
+  "S1": {
+    "policy_id": "star_fho",
+    "sum_insured": 400000,
+    "eligible_room_rent_per_day": 5000,
+    "eligible_source": "Policy cap Rs 5,000/day for sum insured Rs 3-4 lakh",
+    "estimate": {
+      "total_billed": 194000,
+      "payable": 135125,
+      "at_risk": 58875,
+      "ratio": 0.625,
+      "items": [
+        {
+          "item": "Room, boarding & nursing (Deluxe single)",
+          "category": "room",
+          "amount": 32000,
+          "payable": 20000,
+          "at_risk": 12000,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "Consultation / doctor visits",
+          "category": "medical_practitioner_fees",
+          "amount": 12000,
+          "payable": 7500,
+          "at_risk": 4500,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "Surgeon fee",
+          "category": "medical_practitioner_fees",
+          "amount": 50000,
+          "payable": 31250,
+          "at_risk": 18750,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "Anaesthetist fee",
+          "category": "medical_practitioner_fees",
+          "amount": 15000,
+          "payable": 9375,
+          "at_risk": 5625,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "Operation theatre charges",
+          "category": "ot_charges",
+          "amount": 40000,
+          "payable": 25000,
+          "at_risk": 15000,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "Pharmacy & consumables",
+          "category": "pharmacy",
+          "amount": 28000,
+          "payable": 28000,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Diagnostics (lab + ultrasound)",
+          "category": "diagnostics",
+          "amount": 14000,
+          "payable": 14000,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Telephone charges",
+          "category": "non_payable_candidate",
+          "amount": 600,
+          "payable": 0,
+          "at_risk": 600,
+          "rule_type": "NON_PAYABLE_LIST_I"
+        },
+        {
+          "item": "Attendant charges",
+          "category": "non_payable_candidate",
+          "amount": 2400,
+          "payable": 0,
+          "at_risk": 2400,
+          "rule_type": "NON_PAYABLE_LIST_I"
+        }
+      ]
+    },
+    "whatif_room_related_at_risk": {
+      "4000": 0,
+      "5000": 0,
+      "6000": 23500,
+      "8000": 55875
+    },
+    "submission_deadline": "2026-08-22 (15 days from discharge per starhealth.in/claims; verify)",
+    "settlement_input": {
+      "per_head_paid": {
+        "Room, boarding & nursing (Deluxe single)": 20000,
+        "Consultation / doctor visits": 7500,
+        "Surgeon fee": 31250,
+        "Anaesthetist fee": 9375,
+        "Operation theatre charges": 25000,
+        "Pharmacy & consumables": 17500,
+        "Diagnostics (lab + ultrasound)": 8750,
+        "Telephone charges": 0,
+        "Attendant charges": 0
+      },
+      "total_paid": 119375,
+      "intimation_date": "2026-08-04",
+      "submission_date": "2026-08-18",
+      "settlement_date": "2026-09-10"
+    },
+    "expected_audit": {
+      "variance": 15750,
+      "flags": [
+        {
+          "item": "Pharmacy & consumables",
+          "variance": 10500,
+          "verdict": "POTENTIAL_INCONSISTENCY"
+        },
+        {
+          "item": "Diagnostics (lab + ultrasound)",
+          "variance": 5250,
+          "verdict": "POTENTIAL_INCONSISTENCY"
+        }
+      ],
+      "settlement_days_after_submission": 23,
+      "beyond_15_days": true,
+      "indicative_interest": {
+        "rate": "bank rate (test 5%) + 2%",
+        "days": 37,
+        "amount": 847
+      }
+    }
+  },
+  "S2": {
+    "policy_id": "hdfc_optima_secure",
+    "sum_insured": 500000,
+    "eligible_room_rent_per_day": null,
+    "eligible_source": "Room rent at actuals (no limit in schedule)",
+    "estimate": {
+      "total_billed": 53300,
+      "payable": 53000,
+      "at_risk": 300,
+      "ratio": 1.0,
+      "items": [
+        {
+          "item": "Room rent (Single AC)",
+          "category": "room",
+          "amount": 18000,
+          "payable": 18000,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Nursing charges",
+          "category": "nursing",
+          "amount": 4500,
+          "payable": 4500,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Consultation / doctor visits",
+          "category": "medical_practitioner_fees",
+          "amount": 6000,
+          "payable": 6000,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Pharmacy & consumables",
+          "category": "pharmacy",
+          "amount": 15500,
+          "payable": 15500,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Diagnostics (lab)",
+          "category": "diagnostics",
+          "amount": 9000,
+          "payable": 9000,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Television charges",
+          "category": "non_payable_candidate",
+          "amount": 300,
+          "payable": 0,
+          "at_risk": 300,
+          "rule_type": "NON_PAYABLE_LIST_I"
+        }
+      ]
+    },
+    "expected_checks": [
+      "MISSING: prescription supporting pharmacy bill",
+      "MISMATCH: discharge date 2026-08-13 (bill) vs 2026-08-14 (discharge summary)",
+      "MISMATCH: patient name 'Rohan Example' vs 'Rohan Exampel' (review)"
+    ],
+    "submission_deadline": "2026-09-12 (30 days from discharge per policy clause; verify)"
+  },
+  "S3": {
+    "policy_id": "niva_reassure2",
+    "sum_insured": 1000000,
+    "eligible_room_rent_per_day": 4000,
+    "eligible_source": "Eligible category: single private room; hospital tariff for that category Rs 4,000/day (tariff card)",
+    "estimate": {
+      "total_billed": 57500,
+      "payable": 45500,
+      "at_risk": 12000,
+      "ratio": 0.571429,
+      "items": [
+        {
+          "item": "Room rent (Deluxe)",
+          "category": "room",
+          "amount": 14000,
+          "payable": 8000,
+          "at_risk": 6000,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "ICU charges (1 day)",
+          "category": "icu",
+          "amount": 12000,
+          "payable": 12000,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Nursing charges",
+          "category": "nursing",
+          "amount": 5000,
+          "payable": 2857,
+          "at_risk": 2143,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "Medical practitioner fees",
+          "category": "medical_practitioner_fees",
+          "amount": 9000,
+          "payable": 5143,
+          "at_risk": 3857,
+          "rule_type": "PROPORTIONATE_DEDUCTION"
+        },
+        {
+          "item": "Pharmacy & consumables",
+          "category": "pharmacy",
+          "amount": 11000,
+          "payable": 11000,
+          "at_risk": 0,
+          "rule_type": null
+        },
+        {
+          "item": "Diagnostics (lab)",
+          "category": "diagnostics",
+          "amount": 6500,
+          "payable": 6500,
+          "at_risk": 0,
+          "rule_type": null
+        }
+      ]
+    },
+    "whatif_room_related_at_risk": {
+      "3000": 0,
+      "4000": 0,
+      "5000": 4800,
+      "7000": 12000
+    }
+  }
+}

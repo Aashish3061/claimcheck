@@ -1,0 +1,27 @@
+{
+  "_note": "Seed evaluation cases taken from the Insurance Ombudsman (Chennai) April 2021 compilation, which now returns 404. The figures were extracted from a cached copy by an automated summariser, so every case is verified=false. Confirm each figure against a source copy before using the case; otherwise drop it. Covid-era cases: deductions follow GI Council Covid rate guidance, which is NOT in our rules corpus, so expect Review verdicts on PPE lines.",
+  "cases": [
+    {"case_id": "CIO-CHN-2021-0001", "award_ref": "IO/CHN/A/HI/0001/2021-22", "date": "2021-04-12", "insurer": "Star Health", "policy": "Family Health Optima", "sum_insured": 400000,
+     "terms_profile": {"room_cap_per_day": 5000, "cap_applies_to": "room, boarding, nursing", "proportionate_applied_by_insurer": false},
+     "claimed": 300279, "paid": 78865,
+     "heads": [
+       {"head": "Room, boarding, nursing", "claimed": 129000, "disallowed": 99000, "insurer_reason": "eligible room rent Rs 5,000/day x 6 days", "ombudsman": "upheld"},
+       {"head": "Investigations", "claimed": 5875, "disallowed": 1175, "insurer_reason": "80% allowed, no break-up", "ombudsman": "upheld"},
+       {"head": "Medicines (Inj. Meropenem)", "claimed": 30404, "disallowed": 23160, "insurer_reason": "not stated", "ombudsman": "allowed 23160 (GI Council Covid guidelines)"},
+       {"head": "PPE / misc", "claimed": 100000, "disallowed": 92800, "insurer_reason": "PPE at Rs 1,200/day", "ombudsman": "allowed further 11040 (PPE at Rs 3,040/day, TN CMCHIS tariff)"},
+       {"head": "Food", "claimed": 5000, "disallowed": 5000, "insurer_reason": "part of room rent", "ombudsman": "upheld"},
+       {"head": "Discount", "claimed": 279, "disallowed": 279, "ombudsman": "n/a"}],
+     "award_additional": 34200, "verified": false},
+    {"case_id": "CIO-CHN-2021-0022", "award_ref": "IO/CHN/A/HI/0022/2021-22", "insurer": "New India Assurance", "policy": "Asha Kiran", "sum_insured": 300000,
+     "terms_profile": {"room_cap_per_day": 3000, "cap_basis": "1% of sum insured", "proportionate_applied_by_insurer": true},
+     "claimed": 162089, "paid": 51505,
+     "summary": "Room capped at 1% of SI; proportionate clause applied to consultation; masks/gloves treated as non-payable. Ombudsman found only Rs 1,348 more payable.",
+     "award_additional": 1348, "verified": false},
+    {"case_id": "CIO-CHN-2021-0007", "insurer": "ICICI Lombard", "claimed": 207437, "paid": 81373,
+     "summary": "Disputed: DMO charges Rs 17,500, infection control Rs 4,000, PPE paid at Rs 800/day vs Rs 1,500/day claimed. Awarded Rs 26,400 more.",
+     "award_additional": 26400, "verified": false},
+    {"case_id": "CIO-CHN-2021-0002", "insurer": "Star Health", "policy": "Family Health Optima", "claimed": 290270, "paid": 135195,
+     "summary": "Disputed: PPE, Fabiflu, investigations, pre-hospitalisation. Awarded Rs 12,220 more.",
+     "award_additional": 12220, "verified": false}
+  ]
+}

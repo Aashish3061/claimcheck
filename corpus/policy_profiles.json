@@ -1,0 +1,58 @@
+{
+  "_note": "Starter policy profiles. Values come from public policy wordings checked on 7 Oct 2026 (see SOURCES.md). Each profile stays verified_by_human=false until a team member checks it against the PDF and records the clause numbers. The rules engine reads ONLY these profiles; citations in the app must quote the ingested wording chunks, never this file.",
+  "star_fho": {
+    "insurer": "Star Health and Allied Insurance", "product": "Family Health Optima", "uin": "SHAHLIP26046V092526",
+    "wording_url": "https://d28c6jni2fmamz.cloudfront.net/Policy_Family_Health_Optima_Insurance_Plan_V_21_bbe089bd74.pdf",
+    "room_rent": {"type": "per_day_cap_by_sum_insured", "applies_to": "room, boarding and nursing",
+      "bands": [{"si_from": 100000, "si_to": 200000, "cap_per_day": 2000}, {"si_from": 300000, "si_to": 400000, "cap_per_day": 5000}, {"si_from": 500000, "si_to": null, "cap_per_day": null, "category": "single standard AC room"}]},
+    "proportionate_deduction": true,
+    "associated_expense_heads": ["room", "medical_practitioner_fees", "ot_charges"],
+    "associated_heads_status": "TO VERIFY against the wording's definition (the summarised source mentions only the exclusions)",
+    "never_proportionate": ["pharmacy", "consumables", "implants", "medical_devices", "diagnostics", "icu"],
+    "submission_deadline_days_from_discharge": 15, "deadline_source": "https://www.starhealth.in/claims/",
+    "verified_by_human": false
+  },
+  "niva_reassure2": {
+    "insurer": "Niva Bupa Health Insurance", "product": "ReAssure 2.0", "uin": "NBHHLIP27054V032627",
+    "wording_url": "https://transactions.nivabupa.com/pages/doc/policy_wording/ReAssure-2.0-Policy-Wording.pdf",
+    "room_rent": {"type": "eligible_category_from_schedule", "eligible_rent_source": "hospital tariff for the eligible category (user enters it or uploads the tariff card)"},
+    "proportionate_deduction": true,
+    "formula_quote": "(Eligible Room Rent limit / Room Rent actually incurred) * total Associated Medical Expenses",
+    "associated_expense_heads": ["room", "nursing", "medical_practitioner_fees", "ot_charges"],
+    "associated_heads_status": "quoted in the wording: Room Rent, nursing charges, Medical Practitioners' fees and operation theatre charges (including surcharge or taxes thereon)",
+    "never_proportionate": ["pharmacy", "consumables", "implants", "medical_devices", "diagnostics", "icu"],
+    "submission_deadline_days_from_discharge": 30, "deadline_source": "https://transactions.nivabupa.com/claims/pages/health-claim.aspx",
+    "non_payable_reference": "Annexure I lists, via wording clause 6.2.4c",
+    "verified_by_human": false
+  },
+  "hdfc_optima_secure": {
+    "insurer": "HDFC ERGO General Insurance", "product": "my:Optima Secure", "uin": "HDFHLIP26058V082526",
+    "wording_url": "https://customer-portal-assets.hdfcergo.com/documents/PolicyWordings_myOptimaSecure-76673175551.pdf",
+    "room_rent": {"type": "at_actuals_unless_schedule_specifies"},
+    "proportionate_deduction": "only_if_schedule_sets_a_limit",
+    "associated_expense_heads": ["room", "nursing", "medical_practitioner_fees", "ot_charges"],
+    "associated_heads_status": "TO VERIFY (Definition 5 quotes only the exclusions)",
+    "never_proportionate": ["pharmacy", "consumables", "implants", "medical_devices", "diagnostics", "icu"],
+    "submission_deadline_days_from_discharge": 30, "deadline_source": "policy wording clause 1.6",
+    "verified_by_human": false
+  },
+  "care_supreme": {
+    "insurer": "Care Health Insurance", "product": "Care Supreme",
+    "uin": "UNRESOLVED: product page shows CHIHLIP25047V022425, linked PDF prints CHIHLIP23128V012223",
+    "wording_url": "https://cms.careinsurance.com/cms/public/uploads/download_center/care-supreme---policy-terms-and-conditions.pdf",
+    "room_rent": {"type": "no_limit"}, "proportionate_deduction": false,
+    "never_proportionate": ["pharmacy", "consumables", "implants", "medical_devices", "diagnostics"],
+    "submission_deadline_days_from_discharge": "TO VERIFY",
+    "verified_by_human": false
+  },
+  "icici_elevate": {
+    "insurer": "ICICI Lombard General Insurance", "product": "Elevate", "uin": "ICIHLIP27057V062627",
+    "wording_url": "https://www.icicilombard.com/docs/default-source/default-document-library/elevate.pdf",
+    "room_rent": {"type": "limit_or_category_from_schedule"}, "proportionate_deduction": true,
+    "exceptions": ["ICU charges", "hospital does not follow differential billing"],
+    "associated_expense_heads": "TO VERIFY",
+    "never_proportionate": ["pharmacy", "consumables", "implants", "medical_devices", "diagnostics", "icu"],
+    "submission_deadline_days_from_discharge": "TO VERIFY",
+    "verified_by_human": false
+  }
+}
