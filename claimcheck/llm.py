@@ -17,7 +17,9 @@ class LLMError(Exception):
 def client():
     global _client
     if _client is None:
-        _client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        # We handle retries ourselves (bounded, logged); the SDK's own retries are off and calls time out at 90 s.
+        _client = genai.Client(api_key=os.environ["GEMINI_API_KEY"], http_options=types.HttpOptions(
+            timeout=90_000, retry_options=types.HttpRetryOptions(attempts=1)))
     return _client
 
 
