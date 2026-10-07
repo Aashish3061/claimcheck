@@ -23,7 +23,8 @@ SYSTEM_ASSIGN = f"""You assign exactly one rule_type to each bill line, using ON
 {RULES_TEXT}
 For each line give policy_chunk_id and policy_quote: a short sentence copied VERBATIM (character for character) from that
 policy chunk which states the rule. For NON_PAYABLE_LIST_I / SUBSUMED_LIST_II_IV also give regulatory_chunk_id and
-regulatory_quote from the matching Annexure I item chunk, and non_payable_list_no. If no provided chunk governs a line,
+regulatory_quote from the matching Annexure I item chunk, and non_payable_list_no; their policy_quote should be the
+item exactly as printed in the policy wording's own list of non-medical/non-payable items (e.g. "TELEPHONE CHARGES"). If no provided chunk governs a line,
 use UNKNOWN with null quotes. Never output amounts or calculations."""
 
 SEED_QUERIES = ["room rent limit eligible room category proportionate deduction associated medical expenses",
@@ -49,6 +50,9 @@ def gather_rag(policy_id: str, items: list[dict]) -> dict:
     for i in items:
         if i["category"] in ("non_payable_candidate", "other", "consumables"):
             for r in rag.find_non_payable_item(i["description"]):
+                chunks[r["chunk_id"]] = r
+            # policy wordings print the non-payable lists themselves: find this item in the policy's own list
+            for r in rag.retrieve_policy_clause(policy_id, f"{i['description']} list of non-medical items not payable")[:2]:
                 chunks[r["chunk_id"]] = r
     first = (f"Policy: {policy_id} ({profile(policy_id)['product']}). Bill lines:\n{_items_text(items)}\n"
              f"Already retrieved chunk ids: {list(chunks)}. Retrieve anything else you need.")

@@ -16,7 +16,7 @@ EMBED_DIM = 768
 # thinking_level per stage (Gemini 3.x: minimal | low | medium | high). Never send temperature/top_p/top_k.
 THINKING = {"extract": "minimal", "reason": "low", "generate": "minimal", "ocr": "minimal", "v0": "low"}
 PIPELINE_VERSION = os.getenv("PIPELINE_VERSION", "v3")
-MAX_TOOL_ROUNDS = 4
+MAX_TOOL_ROUNDS = 2  # seed retrieval covers most needs; keeps the demo fast
 
 # Prices: USD per 1M tokens, (effective_from, input, output_incl_thinking, cached_input or None)
 # Source: https://ai.google.dev/gemini-api/docs/pricing (checked 7 Oct 2026)
