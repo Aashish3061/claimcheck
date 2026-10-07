@@ -202,6 +202,15 @@ async def admin_pdf_text(request: Request, first: int = 1, last: int = 3):
     return dict(n_pages=len(pages), chars=[len(p) for p in pages], pages={i: pages[i - 1] for i in range(first, min(last, len(pages)) + 1)})
 
 
+@app.get("/api/admin/chunk")
+def admin_chunk(id: str):
+    if (g := _admin_guard()):
+        return g
+    from claimcheck import rag
+    c = rag.get_chunks([id]).get(id)
+    return {k: c.get(k) for k in ("chunk_id", "doc_type", "section", "page", "status", "content")} if c else {}
+
+
 @app.get("/api/admin/search")
 def admin_search(q: str, doc_types: str = "policy_wording", policy_id: str | None = None, k: int = 4):
     if (g := _admin_guard()):
