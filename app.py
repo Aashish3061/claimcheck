@@ -28,7 +28,7 @@ async def accounting(request: Request, call_next):
 async def unhandled(request: Request, exc: Exception):
     import traceback
     from claimcheck.llm import quota_info
-    detail = (quota_info(exc) + " | " + traceback.format_exc()[-600:]) if request.url.path.startswith("/api/admin") and config.ADMIN_ENABLED else None
+    detail = (quota_info(exc) + " | " + traceback.format_exc()[-900:]) if config.ADMIN_ENABLED else None
     resp = JSONResponse({"error": "server_error", "message": f"{type(exc).__name__}", "detail": detail}, status_code=500)
     if request.url.path.startswith("/api/admin") and config.ADMIN_ENABLED:
         resp.headers["Access-Control-Allow-Origin"] = "*"
