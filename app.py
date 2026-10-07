@@ -24,6 +24,13 @@ async def accounting(request: Request, call_next):
     return resp
 
 
+@app.exception_handler(Exception)
+async def unhandled(request: Request, exc: Exception):
+    import traceback
+    detail = traceback.format_exc()[-1500:] if request.url.path.startswith("/api/admin") and config.ADMIN_ENABLED else None
+    return JSONResponse({"error": "server_error", "message": f"{type(exc).__name__}", "detail": detail}, status_code=500)
+
+
 def err(status, code, msg):
     return JSONResponse({"error": code, "message": msg}, status_code=status)
 
