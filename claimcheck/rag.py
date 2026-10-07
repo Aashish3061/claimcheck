@@ -5,9 +5,14 @@ COLS = "chunk_id,doc_id,doc_type,policy_id,title,ref_no,doc_date,status,section,
 
 
 def hybrid(query: str, doc_types: list[str], policy_id: str | None = None, k: int = 4) -> list[dict]:
-    emb = llm.embed([query], "query")[0]
+    sem = 1.0
+    try:
+        emb = llm.embed([query], "query")[0]
+    except Exception:  # embedding unavailable (quota/outage): degrade to full-text search only
+        emb, sem = [0.0] * 768, 0.0
+        llm.acc()["degraded_retrieval"] = True
     rows = db.rpc("hybrid_search", {"query_text": query, "query_embedding": emb, "match_count": k,
-                                    "filter_doc_types": doc_types, "filter_policy_id": policy_id})
+                                    "filter_doc_types": doc_types, "filter_policy_id": policy_id, "semantic_weight": sem})
     return rows or []
 
 

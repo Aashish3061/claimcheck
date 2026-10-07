@@ -171,16 +171,16 @@ def quota_info(e) -> str:
         return ""
 
 
-def _embed_call(model, contents):
-    for attempt in range(6):
+def _embed_call(model, contents, attempts=6):
+    for attempt in range(attempts):
         try:
             return client().models.embed_content(model=model, contents=contents,
                                                  config=types.EmbedContentConfig(output_dimensionality=config.EMBED_DIM))
         except Exception as e:
             d = _retry_delay(e)
-            if d is None or attempt == 5:
+            if d is None or attempt == attempts - 1:
                 raise
-            time.sleep(min(d, 45))
+            time.sleep(min(d, 45 if attempts > 2 else 3))
 
 
 def embed(texts: list[str], kind: str = "query") -> list[list[float]]:
@@ -194,7 +194,8 @@ def embed(texts: list[str], kind: str = "query") -> list[list[float]]:
         batch = [fmt(t)[:24000] for t in texts[i:i + 20]]
         t0 = time.time()
         # one Content per text, so the API returns one embedding per text (a list of strings can be merged into one)
-        r = _embed_call(model, [types.Content(parts=[types.Part.from_text(text=b)]) for b in batch])
+        r = _embed_call(model, [types.Content(parts=[types.Part.from_text(text=b)]) for b in batch],
+                        attempts=6 if kind == "document" else 2)  # user-facing queries fail fast
         vecs = [e.values for e in r.embeddings]
         if len(vecs) != len(batch):
             with ThreadPoolExecutor(8) as ex:
