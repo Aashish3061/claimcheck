@@ -92,6 +92,7 @@ def to_rows(doc_id: str, chunks: list[dict], url: str | None) -> list[dict]:
 
 
 def upsert(rows: list[dict]) -> int:
+    rows = list({r["chunk_id"]: r for r in rows}.values())  # one row per chunk_id per statement
     vecs = llm.embed([f"{r['title']} | {r.get('section') or ''}\n{r['content']}" for r in rows], "document")
     for r, v in zip(rows, vecs):
         r["embedding"] = v
