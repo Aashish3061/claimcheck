@@ -193,10 +193,11 @@ def embed(texts: list[str], kind: str = "query") -> list[list[float]]:
     for i in range(0, len(texts), 20):
         batch = [fmt(t)[:24000] for t in texts[i:i + 20]]
         t0 = time.time()
-        r = _embed_call(model, batch)
+        # one Content per text, so the API returns one embedding per text (a list of strings can be merged into one)
+        r = _embed_call(model, [types.Content(parts=[types.Part.from_text(text=b)]) for b in batch])
         vecs = [e.values for e in r.embeddings]
         if len(vecs) != len(batch):
-            with ThreadPoolExecutor(4) as ex:
+            with ThreadPoolExecutor(8) as ex:
                 vecs = list(ex.map(lambda b: _embed_call(model, b).embeddings[0].values, batch))
         approx = sum(len(b) for b in batch) // 4  # embeddings return no usage metadata; ~4 chars/token estimate
         record("embed_" + kind, model, type("U", (), {"prompt_token_count": approx})(), (time.time() - t0) * 1000)
