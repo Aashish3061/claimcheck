@@ -316,6 +316,9 @@ $('#runAudit').onclick = async () => {
 $('#letterBtn').onclick = async () => { try { const r = await audit(true);
   $('#letter').innerHTML = r.letter ? `<h4>${esc(r.letter.subject)}</h4><pre>${esc(r.letter.body)}</pre><button class="btn sec" onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent)">Copy letter</button>` : '<p>Select at least one item.</p>';
 } catch (e) { $('#letter').textContent = e.message; } };
+if (RECORD) { const b = Object.assign(document.createElement('button'), {className: 'btn', textContent: 'Download recording (s1.json)', type: 'button'});
+  b.style.cssText = 'position:fixed;right:16px;bottom:16px;z-index:9'; document.body.append(b);
+  b.onclick = () => Object.assign(document.createElement('a'), {href: URL.createObjectURL(new Blob([JSON.stringify(REC)], {type: 'application/json'})), download: 's1.json'}).click(); }
 const READY = init();
 </script>
 </body>
