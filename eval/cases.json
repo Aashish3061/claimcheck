@@ -1,0 +1,1708 @@
+{
+ "S1": {
+  "case_id": "S1",
+  "split": "dev",
+  "policy_id": "star_fho",
+  "sum_insured": 400000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Asha Example",
+  "admit": "2026-08-03",
+  "discharge": "2026-08-07",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room, boarding & nursing (Deluxe single)",
+    "category": "room",
+    "amount": 32000,
+    "room_days": 4
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 12000
+   },
+   {
+    "description": "Surgeon fee",
+    "category": "medical_practitioner_fees",
+    "amount": 50000
+   },
+   {
+    "description": "Anaesthetist fee",
+    "category": "medical_practitioner_fees",
+    "amount": 15000
+   },
+   {
+    "description": "Operation theatre charges",
+    "category": "ot_charges",
+    "amount": 40000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 28000
+   },
+   {
+    "description": "Diagnostics (lab + ultrasound)",
+    "category": "diagnostics",
+    "amount": 14000
+   },
+   {
+    "description": "Telephone charges",
+    "category": "non_payable_candidate",
+    "amount": 600
+   },
+   {
+    "description": "Attendant charges",
+    "category": "non_payable_candidate",
+    "amount": 2400
+   }
+  ],
+  "expected": {
+   "total_billed": 194000,
+   "payable": 135125,
+   "at_risk": 58875,
+   "ratio": 0.625,
+   "items": [
+    {
+     "item": "Room, boarding & nursing (Deluxe single)",
+     "category": "room",
+     "amount": 32000,
+     "payable": 20000,
+     "at_risk": 12000,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 12000,
+     "payable": 7500,
+     "at_risk": 4500,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Surgeon fee",
+     "category": "medical_practitioner_fees",
+     "amount": 50000,
+     "payable": 31250,
+     "at_risk": 18750,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Anaesthetist fee",
+     "category": "medical_practitioner_fees",
+     "amount": 15000,
+     "payable": 9375,
+     "at_risk": 5625,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Operation theatre charges",
+     "category": "ot_charges",
+     "amount": 40000,
+     "payable": 25000,
+     "at_risk": 15000,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 28000,
+     "payable": 28000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab + ultrasound)",
+     "category": "diagnostics",
+     "amount": 14000,
+     "payable": 14000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Telephone charges",
+     "category": "non_payable_candidate",
+     "amount": 600,
+     "payable": 0,
+     "at_risk": 600,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    },
+    {
+     "item": "Attendant charges",
+     "category": "non_payable_candidate",
+     "amount": 2400,
+     "payable": 0,
+     "at_risk": 2400,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "S2": {
+  "case_id": "S2",
+  "split": "dev",
+  "policy_id": "hdfc_optima_secure",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "investigation_report"
+  ],
+  "patient": "Rohan Example",
+  "admit": "2026-08-10",
+  "discharge": "2026-08-13",
+  "doc_names": {
+   "discharge_summary": "Rohan Exampel"
+  },
+  "doc_dates": {
+   "discharge_summary": "2026-08-14"
+  },
+  "items": [
+   {
+    "description": "Room rent (Single AC)",
+    "category": "room",
+    "amount": 18000,
+    "room_days": 3
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 4500
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 6000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 15500
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 9000
+   },
+   {
+    "description": "Television charges",
+    "category": "non_payable_candidate",
+    "amount": 300
+   }
+  ],
+  "expected": {
+   "total_billed": 53300,
+   "payable": 53000,
+   "at_risk": 300,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent (Single AC)",
+     "category": "room",
+     "amount": 18000,
+     "payable": 18000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 4500,
+     "payable": 4500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 6000,
+     "payable": 6000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 15500,
+     "payable": 15500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 9000,
+     "payable": 9000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Television charges",
+     "category": "non_payable_candidate",
+     "amount": 300,
+     "payable": 0,
+     "at_risk": 300,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": true
+ },
+ "S3": {
+  "case_id": "S3",
+  "split": "dev",
+  "policy_id": "niva_reassure2",
+  "sum_insured": 1000000,
+  "eligible_room_rent_per_day": 4000,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report",
+   "tariff_card"
+  ],
+  "patient": "Meera Example",
+  "admit": "2026-09-01",
+  "discharge": "2026-09-04",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent (Deluxe)",
+    "category": "room",
+    "amount": 14000,
+    "room_days": 2
+   },
+   {
+    "description": "ICU charges (1 day)",
+    "category": "icu",
+    "amount": 12000
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 5000
+   },
+   {
+    "description": "Medical practitioner fees",
+    "category": "medical_practitioner_fees",
+    "amount": 9000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 11000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 6500
+   }
+  ],
+  "expected": {
+   "total_billed": 57500,
+   "payable": 45500,
+   "at_risk": 12000,
+   "ratio": 0.571429,
+   "items": [
+    {
+     "item": "Room rent (Deluxe)",
+     "category": "room",
+     "amount": 14000,
+     "payable": 8000,
+     "at_risk": 6000,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "ICU charges (1 day)",
+     "category": "icu",
+     "amount": 12000,
+     "payable": 12000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 5000,
+     "payable": 2857,
+     "at_risk": 2143,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Medical practitioner fees",
+     "category": "medical_practitioner_fees",
+     "amount": 9000,
+     "payable": 5143,
+     "at_risk": 3857,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 11000,
+     "payable": 11000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 6500,
+     "payable": 6500,
+     "at_risk": 0,
+     "rule_type": null
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V01": {
+  "case_id": "V01",
+  "split": "dev",
+  "policy_id": "niva_reassure2",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": 4000,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report",
+   "tariff_card"
+  ],
+  "patient": "Kavya Example",
+  "admit": "2026-08-12",
+  "discharge": "2026-08-16",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 12000,
+    "room_days": 4
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 6500
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 8500
+   },
+   {
+    "description": "Surgeon fee",
+    "category": "medical_practitioner_fees",
+    "amount": 59000
+   },
+   {
+    "description": "Operation theatre charges",
+    "category": "ot_charges",
+    "amount": 37000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 24000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 14500
+   },
+   {
+    "description": "Telephone charges",
+    "category": "non_payable_candidate",
+    "amount": 400
+   }
+  ],
+  "expected": {
+   "total_billed": 161900,
+   "payable": 161500,
+   "at_risk": 400,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 12000,
+     "payable": 12000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 6500,
+     "payable": 6500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 8500,
+     "payable": 8500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Surgeon fee",
+     "category": "medical_practitioner_fees",
+     "amount": 59000,
+     "payable": 59000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Operation theatre charges",
+     "category": "ot_charges",
+     "amount": 37000,
+     "payable": 37000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 24000,
+     "payable": 24000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 14500,
+     "payable": 14500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Telephone charges",
+     "category": "non_payable_candidate",
+     "amount": 400,
+     "payable": 0,
+     "at_risk": 400,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V02": {
+  "case_id": "V02",
+  "split": "dev",
+  "policy_id": "hdfc_optima_secure",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Arjun Example",
+  "admit": "2026-07-11",
+  "discharge": "2026-07-13",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 16000,
+    "room_days": 2
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 7500
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 7000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 9500
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 11500
+   },
+   {
+    "description": "Telephone charges",
+    "category": "non_payable_candidate",
+    "amount": 400
+   }
+  ],
+  "expected": {
+   "total_billed": 51900,
+   "payable": 51500,
+   "at_risk": 400,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 16000,
+     "payable": 16000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 7500,
+     "payable": 7500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 7000,
+     "payable": 7000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 9500,
+     "payable": 9500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 11500,
+     "payable": 11500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Telephone charges",
+     "category": "non_payable_candidate",
+     "amount": 400,
+     "payable": 0,
+     "at_risk": 400,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V03": {
+  "case_id": "V03",
+  "split": "dev",
+  "policy_id": "star_fho",
+  "sum_insured": 400000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Neha Example",
+  "admit": "2026-06-13",
+  "discharge": "2026-06-18",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent (room, boarding & nursing)",
+    "category": "room",
+    "amount": 20000,
+    "room_days": 5
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 4000
+   },
+   {
+    "description": "Surgeon fee",
+    "category": "medical_practitioner_fees",
+    "amount": 56000
+   },
+   {
+    "description": "Operation theatre charges",
+    "category": "ot_charges",
+    "amount": 25000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 14000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 14500
+   }
+  ],
+  "expected": {
+   "total_billed": 133500,
+   "payable": 133500,
+   "at_risk": 0,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent (room, boarding & nursing)",
+     "category": "room",
+     "amount": 20000,
+     "payable": 20000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 4000,
+     "payable": 4000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Surgeon fee",
+     "category": "medical_practitioner_fees",
+     "amount": 56000,
+     "payable": 56000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Operation theatre charges",
+     "category": "ot_charges",
+     "amount": 25000,
+     "payable": 25000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 14000,
+     "payable": 14000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 14500,
+     "payable": 14500,
+     "at_risk": 0,
+     "rule_type": null
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V04": {
+  "case_id": "V04",
+  "split": "dev",
+  "policy_id": "niva_reassure2",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": 4000,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report",
+   "tariff_card"
+  ],
+  "patient": "Vikram Example",
+  "admit": "2026-09-11",
+  "discharge": "2026-09-13",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 6000,
+    "room_days": 2
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 2000
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 4000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 22000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 3000
+   }
+  ],
+  "expected": {
+   "total_billed": 37000,
+   "payable": 37000,
+   "at_risk": 0,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 6000,
+     "payable": 6000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 2000,
+     "payable": 2000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 4000,
+     "payable": 4000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 22000,
+     "payable": 22000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 3000,
+     "payable": 3000,
+     "at_risk": 0,
+     "rule_type": null
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V05": {
+  "case_id": "V05",
+  "split": "dev",
+  "policy_id": "hdfc_optima_secure",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "investigation_report"
+  ],
+  "patient": "Ishaan Example",
+  "admit": "2026-09-12",
+  "discharge": "2026-09-14",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 6000,
+    "room_days": 2
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 3500
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 11000
+   },
+   {
+    "description": "Surgeon fee",
+    "category": "medical_practitioner_fees",
+    "amount": 52000
+   },
+   {
+    "description": "Operation theatre charges",
+    "category": "ot_charges",
+    "amount": 44000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 18000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 11000
+   },
+   {
+    "description": "Television charges",
+    "category": "non_payable_candidate",
+    "amount": 500
+   }
+  ],
+  "expected": {
+   "total_billed": 146000,
+   "payable": 145500,
+   "at_risk": 500,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 6000,
+     "payable": 6000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 3500,
+     "payable": 3500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 11000,
+     "payable": 11000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Surgeon fee",
+     "category": "medical_practitioner_fees",
+     "amount": 52000,
+     "payable": 52000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Operation theatre charges",
+     "category": "ot_charges",
+     "amount": 44000,
+     "payable": 44000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 18000,
+     "payable": 18000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 11000,
+     "payable": 11000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Television charges",
+     "category": "non_payable_candidate",
+     "amount": 500,
+     "payable": 0,
+     "at_risk": 500,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": true
+ },
+ "V06": {
+  "case_id": "V06",
+  "split": "dev",
+  "policy_id": "star_fho",
+  "sum_insured": 200000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Pooja Example",
+  "admit": "2026-09-14",
+  "discharge": "2026-09-16",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent (room, boarding & nursing)",
+    "category": "room",
+    "amount": 14000,
+    "room_days": 2
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 12500
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 26000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 8500
+   },
+   {
+    "description": "Telephone charges",
+    "category": "non_payable_candidate",
+    "amount": 400
+   }
+  ],
+  "expected": {
+   "total_billed": 61400,
+   "payable": 42071,
+   "at_risk": 19329,
+   "ratio": 0.285714,
+   "items": [
+    {
+     "item": "Room rent (room, boarding & nursing)",
+     "category": "room",
+     "amount": 14000,
+     "payable": 4000,
+     "at_risk": 10000,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 12500,
+     "payable": 3571,
+     "at_risk": 8929,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 26000,
+     "payable": 26000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 8500,
+     "payable": 8500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Telephone charges",
+     "category": "non_payable_candidate",
+     "amount": 400,
+     "payable": 0,
+     "at_risk": 400,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V07": {
+  "case_id": "V07",
+  "split": "val",
+  "policy_id": "niva_reassure2",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": 4000,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report",
+   "tariff_card"
+  ],
+  "patient": "Rahul Example",
+  "admit": "2026-08-16",
+  "discharge": "2026-08-21",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 25000,
+    "room_days": 5
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 7500
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 9500
+   },
+   {
+    "description": "Surgeon fee",
+    "category": "medical_practitioner_fees",
+    "amount": 34000
+   },
+   {
+    "description": "Operation theatre charges",
+    "category": "ot_charges",
+    "amount": 29000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 21000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 6000
+   }
+  ],
+  "expected": {
+   "total_billed": 132000,
+   "payable": 111000,
+   "at_risk": 21000,
+   "ratio": 0.8,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 25000,
+     "payable": 20000,
+     "at_risk": 5000,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 7500,
+     "payable": 6000,
+     "at_risk": 1500,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 9500,
+     "payable": 7600,
+     "at_risk": 1900,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Surgeon fee",
+     "category": "medical_practitioner_fees",
+     "amount": 34000,
+     "payable": 27200,
+     "at_risk": 6800,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Operation theatre charges",
+     "category": "ot_charges",
+     "amount": 29000,
+     "payable": 23200,
+     "at_risk": 5800,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 21000,
+     "payable": 21000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 6000,
+     "payable": 6000,
+     "at_risk": 0,
+     "rule_type": null
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V08": {
+  "case_id": "V08",
+  "split": "val",
+  "policy_id": "hdfc_optima_secure",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Divya Example",
+  "admit": "2026-06-17",
+  "discharge": "2026-06-19",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 6000,
+    "room_days": 2
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 3000
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 14000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 16500
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 11500
+   }
+  ],
+  "expected": {
+   "total_billed": 51000,
+   "payable": 51000,
+   "at_risk": 0,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 6000,
+     "payable": 6000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 3000,
+     "payable": 3000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 14000,
+     "payable": 14000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 16500,
+     "payable": 16500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 11500,
+     "payable": 11500,
+     "at_risk": 0,
+     "rule_type": null
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V09": {
+  "case_id": "V09",
+  "split": "val",
+  "policy_id": "star_fho",
+  "sum_insured": 300000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Sanjay Example",
+  "admit": "2026-06-12",
+  "discharge": "2026-06-16",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent (room, boarding & nursing)",
+    "category": "room",
+    "amount": 12000,
+    "room_days": 4
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 12000
+   },
+   {
+    "description": "Surgeon fee",
+    "category": "medical_practitioner_fees",
+    "amount": 36000
+   },
+   {
+    "description": "Operation theatre charges",
+    "category": "ot_charges",
+    "amount": 24000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 7500
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 5000
+   },
+   {
+    "description": "Telephone charges",
+    "category": "non_payable_candidate",
+    "amount": 400
+   }
+  ],
+  "expected": {
+   "total_billed": 96900,
+   "payable": 96500,
+   "at_risk": 400,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent (room, boarding & nursing)",
+     "category": "room",
+     "amount": 12000,
+     "payable": 12000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 12000,
+     "payable": 12000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Surgeon fee",
+     "category": "medical_practitioner_fees",
+     "amount": 36000,
+     "payable": 36000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Operation theatre charges",
+     "category": "ot_charges",
+     "amount": 24000,
+     "payable": 24000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 7500,
+     "payable": 7500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 5000,
+     "payable": 5000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Telephone charges",
+     "category": "non_payable_candidate",
+     "amount": 400,
+     "payable": 0,
+     "at_risk": 400,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V10": {
+  "case_id": "V10",
+  "split": "test",
+  "policy_id": "niva_reassure2",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": 4000,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "investigation_report",
+   "tariff_card"
+  ],
+  "patient": "Anita Example",
+  "admit": "2026-09-19",
+  "discharge": "2026-09-23",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 28000,
+    "room_days": 4
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 8000
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 12000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 6500
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 7500
+   },
+   {
+    "description": "Telephone charges",
+    "category": "non_payable_candidate",
+    "amount": 400
+   }
+  ],
+  "expected": {
+   "total_billed": 62400,
+   "payable": 41428,
+   "at_risk": 20972,
+   "ratio": 0.571429,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 28000,
+     "payable": 16000,
+     "at_risk": 12000,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 8000,
+     "payable": 4571,
+     "at_risk": 3429,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 12000,
+     "payable": 6857,
+     "at_risk": 5143,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 6500,
+     "payable": 6500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 7500,
+     "payable": 7500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Telephone charges",
+     "category": "non_payable_candidate",
+     "amount": 400,
+     "payable": 0,
+     "at_risk": 400,
+     "rule_type": "NON_PAYABLE_LIST_I"
+    }
+   ]
+  },
+  "prescription_missing": true
+ },
+ "V11": {
+  "case_id": "V11",
+  "split": "test",
+  "policy_id": "hdfc_optima_secure",
+  "sum_insured": 500000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Farhan Example",
+  "admit": "2026-09-19",
+  "discharge": "2026-09-23",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent",
+    "category": "room",
+    "amount": 16000,
+    "room_days": 4
+   },
+   {
+    "description": "Nursing charges",
+    "category": "nursing",
+    "amount": 2500
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 5000
+   },
+   {
+    "description": "Surgeon fee",
+    "category": "medical_practitioner_fees",
+    "amount": 45000
+   },
+   {
+    "description": "Operation theatre charges",
+    "category": "ot_charges",
+    "amount": 19000
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 15000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 10000
+   }
+  ],
+  "expected": {
+   "total_billed": 112500,
+   "payable": 112500,
+   "at_risk": 0,
+   "ratio": 1.0,
+   "items": [
+    {
+     "item": "Room rent",
+     "category": "room",
+     "amount": 16000,
+     "payable": 16000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Nursing charges",
+     "category": "nursing",
+     "amount": 2500,
+     "payable": 2500,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 5000,
+     "payable": 5000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Surgeon fee",
+     "category": "medical_practitioner_fees",
+     "amount": 45000,
+     "payable": 45000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Operation theatre charges",
+     "category": "ot_charges",
+     "amount": 19000,
+     "payable": 19000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 15000,
+     "payable": 15000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 10000,
+     "payable": 10000,
+     "at_risk": 0,
+     "rule_type": null
+    }
+   ]
+  },
+  "prescription_missing": false
+ },
+ "V12": {
+  "case_id": "V12",
+  "split": "test",
+  "policy_id": "star_fho",
+  "sum_insured": 200000,
+  "eligible_room_rent_per_day": null,
+  "docs": [
+   "final_bill",
+   "discharge_summary",
+   "pharmacy_bill",
+   "prescription",
+   "investigation_report"
+  ],
+  "patient": "Leela Example",
+  "admit": "2026-09-17",
+  "discharge": "2026-09-19",
+  "doc_names": {},
+  "doc_dates": {},
+  "items": [
+   {
+    "description": "Room rent (room, boarding & nursing)",
+    "category": "room",
+    "amount": 10000,
+    "room_days": 2
+   },
+   {
+    "description": "Consultation / doctor visits",
+    "category": "medical_practitioner_fees",
+    "amount": 5500
+   },
+   {
+    "description": "Pharmacy & consumables",
+    "category": "pharmacy",
+    "amount": 14000
+   },
+   {
+    "description": "Diagnostics (lab)",
+    "category": "diagnostics",
+    "amount": 12000
+   }
+  ],
+  "expected": {
+   "total_billed": 41500,
+   "payable": 32200,
+   "at_risk": 9300,
+   "ratio": 0.4,
+   "items": [
+    {
+     "item": "Room rent (room, boarding & nursing)",
+     "category": "room",
+     "amount": 10000,
+     "payable": 4000,
+     "at_risk": 6000,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Consultation / doctor visits",
+     "category": "medical_practitioner_fees",
+     "amount": 5500,
+     "payable": 2200,
+     "at_risk": 3300,
+     "rule_type": "PROPORTIONATE_DEDUCTION"
+    },
+    {
+     "item": "Pharmacy & consumables",
+     "category": "pharmacy",
+     "amount": 14000,
+     "payable": 14000,
+     "at_risk": 0,
+     "rule_type": null
+    },
+    {
+     "item": "Diagnostics (lab)",
+     "category": "diagnostics",
+     "amount": 12000,
+     "payable": 12000,
+     "at_risk": 0,
+     "rule_type": null
+    }
+   ]
+  },
+  "prescription_missing": false
+ }
+}

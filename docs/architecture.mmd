@@ -1,0 +1,28 @@
+flowchart LR
+  U[User: policy + bill, discharge summary,<br/>pharmacy bill, prescriptions, reports, tariff] --> X
+  subgraph Vercel["Vercel - FastAPI app.py (Python)"]
+    X["/api/extract<br/>1 Classify + extract<br/>Gemini 3.5 Flash-Lite, PDF/image in, JSON schema"]:::ai
+    C["/api/checks<br/>2 Completeness, consistency, deadline"]:::code
+    E["/api/estimate"]
+    R["3 Retrieve: hybrid search<br/>tsvector + pgvector, RRF"]:::ai
+    A["4 Reason: function-calling agent<br/>rule type + verbatim quote"]:::ai
+    V["Evidence check: quote must be in stored chunk"]:::code
+    K["5 Rules engine: payable, at risk, formula<br/>(no LLM touches money)"]:::code
+    G["6 Generate: explanations + letters<br/>number guard, template fallback"]:::ai
+    W["/api/whatif<br/>room-rent slider (code only)"]:::code
+    P["/api/pack<br/>7 Claim pack PDF"]:::code
+    AU["/api/audit<br/>8 Settlement vs estimate, 15-day rule"]:::code
+  end
+  X -->|user confirms items| C --> E --> R --> A --> V --> K --> G
+  K --> W
+  K --> P
+  K --> AU
+  DB[("Supabase Postgres<br/>corpus_chunks: IRDAI + 5 policy wordings + Annexure I items<br/>runs: tokens, Rs, latency (no content)<br/>eval_runs")]
+  R <--> DB
+  V <--> DB
+  G -.-> L[Logged per call: usage_metadata -> Rs]
+  L -.-> DB
+  MCP["FastMCP server (bonus)<br/>same tools: retrieve_*, estimate, whatif, timeline"]:::code -.-> R
+  P --> B[Browser merges pack + originals with pdf-lib]
+  classDef ai fill:#e7f2ef,stroke:#0f5c4d
+  classDef code fill:#fff4d6,stroke:#9a6700

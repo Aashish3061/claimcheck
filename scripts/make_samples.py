@@ -4,7 +4,8 @@ import json, os, datetime as dt
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 
-OUT = os.path.join(os.path.dirname(__file__), "sample_claims")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT = os.path.join(ROOT, "sample_claims")
 BANNER = "SYNTHETIC TEST DOCUMENT - fictional hospital and patient - not a real bill or record"
 
 CASES = {
@@ -38,6 +39,46 @@ CASES = {
    docs=["final_bill","discharge_summary","pharmacy_bill","prescription","investigation_report","tariff_card"],
    names={}, dates={}),
 }
+import random as _r
+_rng = _r.Random(20261007)
+_NAMES = ["Kavya Example", "Arjun Example", "Neha Example", "Vikram Example", "Ishaan Example", "Pooja Example",
+          "Rahul Example", "Divya Example", "Sanjay Example", "Anita Example", "Farhan Example", "Leela Example"]
+_HOSP = ["Greenfield Hospital, Jaipur (fictional)", "Harbour Clinic, Kochi (fictional)", "Sunrise Hospital, Lucknow (fictional)",
+         "Maple Hospital, Bhopal (fictional)"]
+_DX = ["Acute appendicitis - laparoscopic appendicectomy", "Community-acquired pneumonia", "Fracture of radius - closed reduction",
+       "Dengue fever", "Kidney stone - ureteroscopy", "Acute gastroenteritis"]
+for n in range(1, 13):
+    pol = ["star_fho", "niva_reassure2", "hdfc_optima_secure"][n % 3]
+    si = {"star_fho": _rng.choice([200000, 300000, 400000]), "niva_reassure2": 500000, "hdfc_optima_secure": 500000}[pol]
+    days = _rng.randint(2, 5)
+    rent = _rng.choice([3000, 4000, 5000, 6000, 7000, 8000, 9000])
+    surg = n % 2 == 1
+    lines = [("Consultation / doctor visits", "medical_practitioner_fees", _rng.randrange(4000, 15000, 500))]
+    if pol != "star_fho":
+        lines.insert(0, ("Nursing charges", "nursing", _rng.randrange(2000, 9000, 500)))
+    if surg:
+        lines += [("Surgeon fee", "medical_practitioner_fees", _rng.randrange(20000, 60000, 1000)),
+                  ("Operation theatre charges", "ot_charges", _rng.randrange(15000, 45000, 1000))]
+    lines += [("Pharmacy & consumables", "pharmacy", _rng.randrange(6000, 30000, 500)),
+              ("Diagnostics (lab)", "diagnostics", _rng.randrange(3000, 15000, 500))]
+    if n % 4 in (1, 2):
+        lines.append(_rng.choice([("Telephone charges", "non_payable_candidate", 400), ("Attendant charges", "non_payable_candidate", 1800),
+                                  ("Television charges", "non_payable_candidate", 500)]))
+    elig = {"star_fho": (2000 if si <= 200000 else 5000), "niva_reassure2": 4000, "hdfc_optima_secure": None}[pol]
+    docs = ["final_bill", "discharge_summary", "pharmacy_bill", "prescription", "investigation_report"] + (["tariff_card"] if pol == "niva_reassure2" else [])
+    if n % 5 == 0:
+        docs.remove("prescription")
+    a = f"2026-0{_rng.randint(6, 9)}-{_rng.randint(10, 20)}"
+    d = (dt.date.fromisoformat(a) + dt.timedelta(days=days)).isoformat()
+    CASES[f"V{n:02d}"] = dict(policy_id=pol, sum_insured=si, age=_rng.randint(25, 60), patient=_NAMES[n - 1], hospital=_rng.choice(_HOSP),
+        admit=a, discharge=d, diagnosis=_rng.choice(_DX),
+        room=dict(label="Room rent" + (" (room, boarding & nursing)" if pol == "star_fho" else ""), per_day=rent, days=days),
+        eligible_per_day=elig, eligible_source="variant", lines=lines,
+        footer="Doctor visit, surgeon, anaesthetist and OT charges are billed as per room category." if pol != "hdfc_optima_secure" else "",
+        docs=docs, names={}, dates={})
+SPLIT = {**{c: "dev" for c in ["S1", "S2", "S3", "V01", "V02", "V03", "V04", "V05", "V06"]},
+         **{c: "val" for c in ["V07", "V08", "V09"]}, **{c: "test" for c in ["V10", "V11", "V12"]}}
+
 # Heads that are 'associated medical expenses' per profile (see policy_profiles.json; S1 Star list TO VERIFY)
 ASSOC = {"star_fho": {"room","medical_practitioner_fees","ot_charges"},
          "niva_reassure2": {"room","nursing","medical_practitioner_fees","ot_charges"},
@@ -85,7 +126,7 @@ def docs_for(cid, c):
      "pharmacy_bill": ("Pharmacy Bill", hdr("pharmacy_bill") + ["Medicines and consumables as per prescription", f"Total: Rs {ph:,}"]),
      "prescription": ("Prescription", hdr("prescription") + ["Rx: medicines as dispensed (see pharmacy bill)", "Signed: Dr. Sample (fictional)"]),
      "investigation_report": ("Investigation Reports", hdr("investigation_report") + ["Lab and imaging reports enclosed", f"Billed: Rs {dg:,}"]),
-     "tariff_card": ("Room Tariff Card", ["Single private room: Rs 4,000/day", "Deluxe room: Rs 7,000/day", c["footer"]]),
+     "tariff_card": ("Room Tariff Card", [f"Single private room: Rs {(c['eligible_per_day'] or 0):,}/day", f"Deluxe room: Rs {max(c['room']['per_day'], (c['eligible_per_day'] or 0) + 1000):,}/day", c["footer"]]),
     }
     return {k: d[k] for k in c["docs"]}
 
@@ -122,7 +163,17 @@ def main():
                 indicative_interest=dict(rate=f"bank rate (test {test_bank_rate:.0%}) + 2%", days=int_days,
                                          amount=int(paid * (test_bank_rate + 0.02) * int_days / 365 + 0.5)))
         truth[cid] = t
-    json.dump(truth, open(os.path.join(OUT, "expected.json"), "w"), indent=2)
+    json.dump({k: v for k, v in truth.items() if k.startswith("S")}, open(os.path.join(OUT, "expected.json"), "w"), indent=2)
+    cases = {}
+    for cid, c in CASES.items():
+        items = [dict(description=c["room"]["label"], category="room", amount=c["room"]["per_day"] * c["room"]["days"], room_days=c["room"]["days"])]
+        items += [dict(description=d, category=cat, amount=a) for d, cat, a in c["lines"]]
+        cases[cid] = dict(case_id=cid, split=SPLIT[cid], policy_id=c["policy_id"], sum_insured=c["sum_insured"],
+                          eligible_room_rent_per_day=c["eligible_per_day"] if c["policy_id"] == "niva_reassure2" else None,
+                          docs=c["docs"], patient=c["patient"], admit=c["admit"], discharge=c["discharge"],
+                          doc_names=c["names"], doc_dates=c["dates"], items=items, expected=truth[cid]["estimate"],
+                          prescription_missing="pharmacy_bill" in c["docs"] and "prescription" not in c["docs"])
+    json.dump(cases, open(os.path.join(ROOT, "eval", "cases.json"), "w"), indent=1)
     print(json.dumps({k: (v["estimate"]["total_billed"], v["estimate"]["payable"], v["estimate"]["at_risk"], v.get("whatif_room_related_at_risk"), v.get("expected_audit", {}).get("variance")) for k, v in truth.items()}, indent=1))
 
 if __name__ == "__main__":
