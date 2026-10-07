@@ -171,13 +171,14 @@ def admin_ingest_url(doc_id: str, url: str, ocr: bool = False):
 
 
 @app.post("/api/admin/ingest_pdf")
-async def admin_ingest_pdf(request: Request, doc_id: str, url: str = "", ocr: bool = False):
+async def admin_ingest_pdf(request: Request, doc_id: str, url: str = "", ocr: bool = False, part: int = 0, page_offset: int = 0):
+    """part/page_offset let a large PDF be sent as page-range parts (each under Vercel's 4.5 MB body limit)."""
     if (g := _admin_guard()):
         return g
-    return _ingest_bytes(doc_id, await request.body(), url or None, ocr)
+    return _ingest_bytes(doc_id, await request.body(), url or None, ocr, part, page_offset)
 
 
-def _ingest_bytes(doc_id, data, url, ocr):
+def _ingest_bytes(doc_id, data, url, ocr, part=0, page_offset=0):
     from claimcheck import ingest
     pages = ingest.pdf_pages(data)
     chars = sum(len(p) for p in pages)
@@ -187,6 +188,10 @@ def _ingest_bytes(doc_id, data, url, ocr):
     if doc_id == "irdai_standardisation_2020":
         from claimcheck.annexure import annexure_items
         chunks += annexure_items(pages)
+    for c in chunks:
+        c["page"] = (c.get("page") or 0) + page_offset
+        if part and not c.get("chunk_id"):
+            c["part"] = part
     rows = ingest.to_rows(doc_id, chunks, url)
     n = ingest.upsert(rows)
     return dict(doc_id=doc_id, pages=len(pages), chars=chars, chunks=n,

@@ -84,7 +84,7 @@ def to_rows(doc_id: str, chunks: list[dict], url: str | None) -> list[dict]:
     meta = MANIFEST[doc_id]
     rows = []
     for n, c in enumerate(chunks, 1):
-        rows.append(dict(chunk_id=c.get("chunk_id") or f"{doc_id}-{n:04d}", doc_id=doc_id, doc_type=c.get("doc_type", meta["doc_type"]),
+        rows.append(dict(chunk_id=c.get("chunk_id") or (f"{doc_id}-p{c['part']:03d}-{n:03d}" if c.get("part") else f"{doc_id}-{n:04d}"), doc_id=doc_id, doc_type=c.get("doc_type", meta["doc_type"]),
                          policy_id=meta.get("policy_id"), title=meta["title"], issuer=meta["issuer"], ref_no=meta["ref_no"],
                          doc_date=meta.get("doc_date"), status=meta["status"], section=c.get("section"), page=c.get("page"),
                          list_no=c.get("list_no"), url=url, content=c["content"]))
