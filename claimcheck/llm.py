@@ -145,16 +145,45 @@ def tool_loop(stage: str, system: str, first: str, fns: dict, model: str | None 
     return results
 
 
+def _retry_delay(e) -> float | None:
+    """Seconds to wait for a 429 (uses the API's RetryInfo when present)."""
+    if getattr(e, "code", None) != 429:
+        return None
+    try:
+        for d in (e.details or {}).get("error", {}).get("details", []):
+            if d.get("@type", "").endswith("RetryInfo"):
+                return float(str(d.get("retryDelay", "10s")).rstrip("s")) + 1
+    except Exception:
+        pass
+    return 15.0
+
+
+def quota_info(e) -> str:
+    try:
+        return "; ".join(f"{v.get('quotaMetric', '')}:{v.get('quotaId', '')}" for d in e.details["error"]["details"]
+                         for v in d.get("violations", []))[:300]
+    except Exception:
+        return ""
+
+
 def embed(texts: list[str], kind: str = "query") -> list[list[float]]:
     """gemini-embedding-2 has no task_type; the task goes into the text."""
     model = config.MODELS["embed"]
     fmt = (lambda s: f"task: search result | query: {s}") if kind == "query" else (lambda s: f"title: none | text: {s}")
     out = []
-    for i in range(0, len(texts), 50):
-        batch = [fmt(t)[:24000] for t in texts[i:i + 50]]
+    for i in range(0, len(texts), 20):
+        batch = [fmt(t)[:24000] for t in texts[i:i + 20]]
         t0 = time.time()
-        r = client().models.embed_content(model=model, contents=batch,
-                                          config=types.EmbedContentConfig(output_dimensionality=config.EMBED_DIM))
+        for attempt in range(6):
+            try:
+                r = client().models.embed_content(model=model, contents=batch,
+                                                  config=types.EmbedContentConfig(output_dimensionality=config.EMBED_DIM))
+                break
+            except Exception as e:
+                d = _retry_delay(e)
+                if d is None or attempt == 5:
+                    raise
+                time.sleep(min(d, 45))
         approx = sum(len(b) for b in batch) // 4  # embeddings return no usage metadata; ~4 chars/token estimate
         record("embed_" + kind, model, type("U", (), {"prompt_token_count": approx})(), (time.time() - t0) * 1000)
         out.extend([e.values for e in r.embeddings])

@@ -27,7 +27,8 @@ async def accounting(request: Request, call_next):
 @app.exception_handler(Exception)
 async def unhandled(request: Request, exc: Exception):
     import traceback
-    detail = traceback.format_exc()[-1500:] if request.url.path.startswith("/api/admin") and config.ADMIN_ENABLED else None
+    from claimcheck.llm import quota_info
+    detail = (quota_info(exc) + " | " + traceback.format_exc()[-600:]) if request.url.path.startswith("/api/admin") and config.ADMIN_ENABLED else None
     return JSONResponse({"error": "server_error", "message": f"{type(exc).__name__}", "detail": detail}, status_code=500)
 
 
