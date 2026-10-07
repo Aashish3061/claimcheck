@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>ClaimCheck ingest relay</title>
+<p>Admin ingest relay (works only while ADMIN_ENABLED=1 on the server).</p>
+<script>
+// Receives {doc_id, url, bytes} by postMessage from a source page whose CSP blocks direct uploads, and forwards it.
+addEventListener('message', async e => {
+  const m = e.data || {}; if (!m.doc_id || !m.bytes) return;
+  const r = await fetch(`/api/admin/ingest_pdf?doc_id=${encodeURIComponent(m.doc_id)}&url=${encodeURIComponent(m.url || '')}`,
+    {method: 'POST', headers: {'Content-Type': 'text/plain'}, body: m.bytes});
+  e.source.postMessage({doc_id: m.doc_id, status: r.status, body: (await r.text()).slice(0, 300)}, '*');
+});
+</script>
