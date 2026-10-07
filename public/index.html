@@ -114,7 +114,8 @@ footer{max-width:980px;margin:auto;padding:12px 16px;color:var(--mute);font-size
 
 <script>
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
-const REPLAY = new URLSearchParams(location.search).get('replay') === '1';
+const REPLAY = new URLSearchParams(location.search).get('replay') === '1', RECORD = new URLSearchParams(location.search).get('record') === '1';
+window.REC = {};
 const SID = crypto.randomUUID(); let firstCall = true, cost = 0, tokens = 0;
 const S = {docs: [], files: [], items: [], estimate: null, assignments: [], checks: null, policies: []};
 const inr = n => n == null ? '-' : 'Rs ' + Number(n).toLocaleString('en-IN');
@@ -123,14 +124,16 @@ const VERD = {AT_RISK:'At risk', REVIEW:'Review', PAYABLE:'Payable', POTENTIAL_I
 const pill = v => `<span class="pill ${v}">${VERD[v] || v}</span>`;
 
 async function api(path, opts = {}, kind = 'json') {
-  if (REPLAY) { const r = await fetch('/replay/' + path.replace(/^\/api\//, '').replace(/\W/g, '_') + (opts.replayKey || '') + '.json'); return r.json(); }
+  const rkey = path.replace(/^\/api\//, '').replace(/\W/g, '_') + (opts.replayKey || '');
+  if (REPLAY) { if (kind === 'blob') throw new Error('Pack download is not available in replay mode'); await new Promise(r => setTimeout(r, 600)); return (await fetch('/replay/' + rkey + '.json')).json(); }
   const h = Object.assign({'X-Session-Id': SID}, opts.headers || {});
   if (firstCall && path === '/api/extract') { h['X-Session-New'] = '1'; firstCall = false; }
   const r = await fetch(path, Object.assign({}, opts, {headers: h}));
   cost += parseFloat(r.headers.get('X-Cost-INR') || 0); tokens += parseInt(r.headers.get('X-Tokens') || 0);
   $('#cost').textContent = cost.toFixed(2); $('#tok').textContent = tokens.toLocaleString('en-IN');
   if (!r.ok) { let m = r.status; try { m = (await r.json()).message || m } catch (e) {} throw new Error(m); }
-  return kind === 'blob' ? r.blob() : r.json();
+  if (kind === 'blob') return r.blob();
+  const j = await r.json(); if (RECORD) REC[rkey] = j; return j;
 }
 const post = (p, body, kind) => api(p, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}, kind);
 
