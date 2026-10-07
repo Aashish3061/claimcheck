@@ -58,6 +58,8 @@ def flush(verdict_counts: dict | None = None):
     a = _acc.get()
     if not a or not a["rows"] or not db.configured():
         return
+    for r in a["rows"]:
+        r.setdefault("verdict_counts", None)
     if verdict_counts:
         a["rows"][-1]["verdict_counts"] = verdict_counts
     try:
@@ -97,6 +99,9 @@ def generate_json(stage: str, contents: list, schema: type[BaseModel], system: s
         except Exception as e:  # network / quota / 4xx
             record(stage, model, None, (time.time() - t0) * 1000, ok=False, error_code=type(e).__name__[:40], thinking=thinking)
             last_err = f"{type(e).__name__}: {str(e)[:200]}"
+            d = _retry_delay(e)
+            if d:
+                time.sleep(min(d, 30))
             continue
         record(stage, model, resp.usage_metadata, (time.time() - t0) * 1000, thinking=thinking)
         txt = resp.text or ""
@@ -166,25 +171,35 @@ def quota_info(e) -> str:
         return ""
 
 
+def _embed_call(model, contents):
+    for attempt in range(6):
+        try:
+            return client().models.embed_content(model=model, contents=contents,
+                                                 config=types.EmbedContentConfig(output_dimensionality=config.EMBED_DIM))
+        except Exception as e:
+            d = _retry_delay(e)
+            if d is None or attempt == 5:
+                raise
+            time.sleep(min(d, 45))
+
+
 def embed(texts: list[str], kind: str = "query") -> list[list[float]]:
-    """gemini-embedding-2 has no task_type; the task goes into the text."""
+    """gemini-embedding-2 has no task_type; the task goes into the text. One vector per text is enforced:
+    if a batched call returns fewer vectors (multimodal aggregation), fall back to one call per text."""
+    from concurrent.futures import ThreadPoolExecutor
     model = config.MODELS["embed"]
     fmt = (lambda s: f"task: search result | query: {s}") if kind == "query" else (lambda s: f"title: none | text: {s}")
     out = []
     for i in range(0, len(texts), 20):
         batch = [fmt(t)[:24000] for t in texts[i:i + 20]]
         t0 = time.time()
-        for attempt in range(6):
-            try:
-                r = client().models.embed_content(model=model, contents=batch,
-                                                  config=types.EmbedContentConfig(output_dimensionality=config.EMBED_DIM))
-                break
-            except Exception as e:
-                d = _retry_delay(e)
-                if d is None or attempt == 5:
-                    raise
-                time.sleep(min(d, 45))
+        r = _embed_call(model, batch)
+        vecs = [e.values for e in r.embeddings]
+        if len(vecs) != len(batch):
+            with ThreadPoolExecutor(4) as ex:
+                vecs = list(ex.map(lambda b: _embed_call(model, b).embeddings[0].values, batch))
         approx = sum(len(b) for b in batch) // 4  # embeddings return no usage metadata; ~4 chars/token estimate
         record("embed_" + kind, model, type("U", (), {"prompt_token_count": approx})(), (time.time() - t0) * 1000)
-        out.extend([e.values for e in r.embeddings])
+        out.extend(vecs)
+    assert len(out) == len(texts)
     return out

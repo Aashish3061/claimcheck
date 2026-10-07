@@ -35,6 +35,9 @@ def rpc(fn: str, payload: dict, timeout=TIMEOUT):
 
 
 def insert(table: str, rows, upsert_on: str | None = None, timeout=TIMEOUT):
+    if isinstance(rows, list):  # PostgREST bulk insert needs identical keys
+        keys = set().union(*(r.keys() for r in rows)) if rows else set()
+        rows = [{k: r.get(k) for k in keys} for r in rows]
     prefer = "return=minimal"
     params = None
     if upsert_on:
