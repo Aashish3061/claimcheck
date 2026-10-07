@@ -7,6 +7,8 @@ COLS = "chunk_id,doc_id,doc_type,policy_id,title,ref_no,doc_date,status,section,
 def hybrid(query: str, doc_types: list[str], policy_id: str | None = None, k: int = 4) -> list[dict]:
     sem = 1.0
     try:
+        if llm.acc().get("degraded_retrieval"):
+            raise RuntimeError("embeddings unavailable earlier in this request")
         emb = llm.embed([query], "query")[0]
     except Exception:  # embedding unavailable (quota/outage): degrade to full-text search only
         emb, sem = [0.0] * 768, 0.0
