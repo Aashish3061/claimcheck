@@ -9,7 +9,7 @@ docs = []
 for n in ["final_bill", "discharge_summary", "pharmacy_bill", "prescription", "investigation_report"]:
     with open(f"{root}/sample_claims/S1/{n}.pdf", "rb") as f:
         docs.append(httpx.post(f"{base}/api/extract", files={"file": (f"{n}.pdf", f, "application/pdf")}, headers=h, timeout=120).json())
-bill = next(d for d in docs if d["doc_type"] == "final_bill")
+bill = next(d for d in docs if d["doc_type"] in ("final_bill", "itemised_bill"))  # same rule as the app
 items = [dict(i, confirmed=True) for i in bill["line_items"]]
 r = httpx.post(f"{base}/api/estimate", json=dict(policy_id="star_fho", sum_insured=400000, items=items), headers=h, timeout=300).json()
 e = r["estimate"]
