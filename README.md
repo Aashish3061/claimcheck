@@ -1,6 +1,6 @@
 # ClaimCheck
 
-**Get your health-insurance reimbursement claim right before you submit it, then check the insurer's maths afterwards.**
+**Understand your health-insurance reimbursement claim before you submit it, and then check the insurer's maths afterwards.**
 
 Live app: https://claimcheck-pi.vercel.app (GenAI Startup Sprint, group project)
 
